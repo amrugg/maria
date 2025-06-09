@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title></title>
+    <meta content="">
+    <style></style>
+  </head>
+  <body>
+  <input type="file" id="filereader"/>
+  <br><button id=copy hidden></button>
+        <script type="module">
+            import MidiParser from 'https://cdn.skypack.dev/midi-parser-js'
+            // select the INPUT element that will handle
+            // the file selection.
+            let source = document.getElementById('filereader');
+            // provide the File source and a callback function
+            var text;
+            MidiParser.parse( source, function(obj){
+                var button = document.getElementById("copy");
+                var notes = [];
+                var track = obj.track;
+                track.forEach(function(t){
+                    notes = notes.concat(t.event);
+                });
+                for(var i = notes.length-1; i >= 0; i--) {
+                    if(notes[i].type !== 9) {
+                        notes.splice(i,1);
+                    }
+                }
+                button.hidden = false;
+                button.textContent = "Click to copy";
+                button.onclick = function(){
+                    navigator.clipboard.writeText(JSON.stringify(notes));
+                }
+            });
+        </script>
+  </body>
+</html>
