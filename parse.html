@@ -14,22 +14,62 @@
             let source = document.getElementById('filereader');
             // provide the File source and a callback function
             var text;
+            function processBeat(curBeatLength) {
+                var wholeBeatLength = 1916;
+                if (typeof wholeBeatLength !== 'number' || typeof curBeatLength !== 'number' ||
+                    wholeBeatLength <= 0 || curBeatLength <= 0) {
+                    return 0; // Handle invalid input
+                }
+
+                // Calculate the ratio of the whole beat length to the current note length.
+                var ratio = curBeatLength / wholeBeatLength * 4;
+                ratio /= 1/32;
+                ratio = Math.round(ratio);
+                ratio *= 1/32;
+                return ratio;
+            }
             MidiParser.parse( source, function(obj){
                 var button = document.getElementById("copy");
-                var notes = [];
+                var combinedTrack = [];
                 var track = obj.track;
                 track.forEach(function(t){
-                    notes = notes.concat(t.event);
-                });
-                for(var i = notes.length-1; i >= 0; i--) {
-                    if(notes[i].type !== 9) {
-                        notes.splice(i,1);
+                    var trueTime = 0;
+                    var notes = t.event;
+                    var noteOnListen = {};
+                    for(var i = 0; i < notes.length; i++) {
+                        var note = notes[i];
+                        trueTime += note.deltaTime;
+                        note.trueTime = trueTime;
+                        if(note.type !== 9) {
+                            notes.splice(i,1);
+                            --i;
+                            continue;
+                        }
+                        if(note.data[1] === 0 && noteOnListen[note.data[0]]) {
+                            noteOnListen[note.data[0]].beat = processBeat(note.trueTime - noteOnListen[note.data[0]].trueTime)
+                            notes.splice(i,1);
+                            --i;
+                        } else {
+                            noteOnListen[note.data[0]] = note;
+                        }
                     }
-                }
+                    combinedTrack = combinedTrack.concat(notes);
+                });
+                combinedTrack.sort(function(a,b) {
+                    return a.trueTime - b.trueTime;
+                })
+                combinedTrack.forEach(function(e,i) {
+                    combinedTrack[i] = {
+                        deltaTime: e.deltaTime,
+                        trueTime: e.trueTime,
+                        beat: e.beat,
+                        data: e.data,
+                    }
+                })
                 button.hidden = false;
                 button.textContent = "Click to copy";
                 button.onclick = function(){
-                    navigator.clipboard.writeText(JSON.stringify(notes));
+                    navigator.clipboard.writeText(JSON.stringify(combinedTrack));
                 }
             });
         </script>
