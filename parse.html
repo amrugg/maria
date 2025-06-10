@@ -14,21 +14,23 @@
             let source = document.getElementById('filereader');
             // provide the File source and a callback function
             var text;
+
+            var wholeBeatLength;
             function processBeat(curBeatLength) {
-                var wholeBeatLength = 1916;
-                if (typeof wholeBeatLength !== 'number' || typeof curBeatLength !== 'number' ||
-                    wholeBeatLength <= 0 || curBeatLength <= 0) {
-                    return 0; // Handle invalid input
+                if (typeof wholeBeatLength !== 'number') {
+                    wholeBeatLength = 4* curBeatLength / (prompt("How many beats does the first note receive? (e.g. 4 for a whole note, 1.5 for a dotted quarter, 0.5 for an 8th note)")) || 1916;
                 }
 
                 // Calculate the ratio of the whole beat length to the current note length.
                 var ratio = curBeatLength / wholeBeatLength * 4;
-                ratio /= 1/32;
+                ratio /= 1/16;
                 ratio = Math.round(ratio);
-                ratio *= 1/32;
+                ratio *= 1/16;
                 return ratio;
             }
+            var beatsPerMeasure = 4;
             MidiParser.parse( source, function(obj){
+                beatsPerMeasure = prompt("How many beats per measure? (e.g. 4 for 4/4, 3 for 3/4)") || 4;
                 var button = document.getElementById("copy");
                 var combinedTrack = [];
                 var track = obj.track;
@@ -36,42 +38,83 @@
                     var trueTime = 0;
                     var notes = t.event;
                     var noteOnListen = {};
+                    var lastNoteEndTime = 0;
+                    var curBeat = 0;
+
                     for(var i = 0; i < notes.length; i++) {
                         var note = notes[i];
                         trueTime += note.deltaTime;
                         note.trueTime = trueTime;
+                        
                         if(note.type !== 9) {
                             notes.splice(i,1);
                             --i;
                             continue;
                         }
+                        
                         if(note.data[1] === 0 && noteOnListen[note.data[0]]) {
-                            noteOnListen[note.data[0]].beat = processBeat(note.trueTime - noteOnListen[note.data[0]].trueTime)
+                            // Note off event - calculate note duration
+                            noteOnListen[note.data[0]].beat = processBeat(note.trueTime - noteOnListen[note.data[0]].trueTime);
+                            noteOnListen[note.data[0]].trueBeat = curBeat;
+                            curBeat += noteOnListen[note.data[0]].beat;
+                            lastNoteEndTime = Math.max(lastNoteEndTime, note.trueTime);
                             notes.splice(i,1);
                             --i;
                         } else {
+                            // Note on event - check for rest before this note
+                            if(trueTime - lastNoteEndTime > 50) {
+                                var restDuration = trueTime - lastNoteEndTime;
+                                var restsToInsert = createRestNotes(restDuration, lastNoteEndTime, beatsPerMeasure - curBeat%4);
+                                
+                                // Insert rests into the notes array
+                                notes.splice.apply(notes, [i, 0].concat(restsToInsert));
+                                i += restsToInsert.length;
+                            }
+                            
                             noteOnListen[note.data[0]] = note;
                         }
                     }
-                    combinedTrack = combinedTrack.concat(notes);
+                    combinedTrack.push(notes);
                 });
-                combinedTrack.sort(function(a,b) {
-                    return a.trueTime - b.trueTime;
-                })
-                combinedTrack.forEach(function(e,i) {
-                    combinedTrack[i] = {
+                combinedTrack.forEach(function(arr){
+                    arr.forEach(function(e,i) {
+                    arr[i] = {
                         deltaTime: e.deltaTime,
                         trueTime: e.trueTime,
                         beat: e.beat,
                         data: e.data,
                     }
-                })
+                })});
                 button.hidden = false;
                 button.textContent = "Click to copy";
                 button.onclick = function(){
                     navigator.clipboard.writeText(JSON.stringify(combinedTrack));
                 }
             });
+            function createRestNotes(totalDuration, startTime, maxBeats) {
+                var rests = [];
+                var currentTime = startTime;
+                var remainingDuration = totalDuration;
+                
+                // You'll need to define what constitutes a "single beat" duration
+                // This could be based on your tempo, time signature, or a fixed value
+                var measureBeatDuration = wholeBeatLength * maxBeats/4 ; // Adjust this value based on your beat system
+                debugger
+                while(remainingDuration > 50) {
+                    var restDuration = Math.min(remainingDuration, measureBeatDuration);
+                    var restNote = {
+                        trueTime: currentTime + restDuration,
+                        deltaTime: 0,
+                        beat: processBeat(restDuration),
+                        data: ["rest", 0] // Rest-specific data if needed
+                    };
+                    rests.push(restNote);
+                    remainingDuration -= restDuration;
+                    currentTime += restDuration;
+                }
+                
+                return rests;
+            }
         </script>
   </body>
 </html>
