@@ -18,7 +18,7 @@
             var wholeBeatLength;
             function processBeat(curBeatLength) {
                 if (typeof wholeBeatLength !== 'number') {
-                    wholeBeatLength = 4* curBeatLength / (prompt("How many beats does the first note receive? (e.g. 4 for a whole note, 1.5 for a dotted quarter, 0.5 for an 8th note)")) || 1916;
+                    wholeBeatLength = 4* curBeatLength / (prompt("How many beats does the first note receive? (e.g. 4 for a whole note, 1.5 for a dotted quarter, 0.5 for an 8th note)") || 1);
                 }
 
                 // Calculate the ratio of the whole beat length to the current note length.
@@ -30,6 +30,7 @@
             }
             var beatsPerMeasure = 4;
             MidiParser.parse( source, function(obj){
+                debugger
                 beatsPerMeasure = prompt("How many beats per measure? (e.g. 4 for 4/4, 3 for 3/4)") || 4;
                 var button = document.getElementById("copy");
                 var combinedTrack = [];
@@ -64,11 +65,12 @@
                             // Note on event - check for rest before this note
                             if(trueTime - lastNoteEndTime > 50) {
                                 var restDuration = trueTime - lastNoteEndTime;
-                                var restsToInsert = createRestNotes(restDuration, lastNoteEndTime, beatsPerMeasure - curBeat%4);
-                                
+                                var restsToInsert = createRestNotes(restDuration, lastNoteEndTime, beatsPerMeasure - curBeat%4, curBeat);
+                                debugger
+                                curBeat += restsToInsert.newBeats;
                                 // Insert rests into the notes array
-                                notes.splice.apply(notes, [i, 0].concat(restsToInsert));
-                                i += restsToInsert.length;
+                                notes.splice.apply(notes, [i, 0].concat(restsToInsert.rests));
+                                i += restsToInsert.rests.length;
                             }
                             
                             noteOnListen[note.data[0]] = note;
@@ -79,7 +81,7 @@
                 combinedTrack.forEach(function(arr){
                     arr.forEach(function(e,i) {
                     arr[i] = {
-                        deltaTime: e.deltaTime,
+                        trueBeat: e.trueBeat,
                         trueTime: e.trueTime,
                         beat: e.beat,
                         data: e.data,
@@ -91,7 +93,7 @@
                     navigator.clipboard.writeText(JSON.stringify(combinedTrack));
                 }
             });
-            function createRestNotes(totalDuration, startTime, maxBeats) {
+            function createRestNotes(totalDuration, startTime, maxBeats, curBeat) {
                 var rests = [];
                 var currentTime = startTime;
                 var remainingDuration = totalDuration;
@@ -99,21 +101,24 @@
                 // You'll need to define what constitutes a "single beat" duration
                 // This could be based on your tempo, time signature, or a fixed value
                 var measureBeatDuration = wholeBeatLength * maxBeats/4 ; // Adjust this value based on your beat system
-                debugger
+                
+                var newBeats = 0;
                 while(remainingDuration > 50) {
                     var restDuration = Math.min(remainingDuration, measureBeatDuration);
+                    var restBeats = processBeat(restDuration);
                     var restNote = {
+                        trueBeat: curBeat + newBeats,
                         trueTime: currentTime + restDuration,
-                        deltaTime: 0,
-                        beat: processBeat(restDuration),
+                        beat: restBeats,
                         data: ["rest", 0] // Rest-specific data if needed
                     };
+                    newBeats += restBeats;
                     rests.push(restNote);
                     remainingDuration -= restDuration;
                     currentTime += restDuration;
                 }
                 
-                return rests;
+                return {rests, newBeats};
             }
         </script>
   </body>
