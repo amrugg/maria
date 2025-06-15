@@ -1,5 +1,30 @@
 var noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-var midi = [[{"trueBeat":0,"trueTime":0,"beat":1,"data":[64,96]},{"trueBeat":1,"trueTime":480,"beat":1,"data":[64,96]},{"trueBeat":2,"trueTime":960,"beat":1,"data":[65,96]},{"trueBeat":3,"trueTime":1440,"beat":1,"data":[67,96]},{"trueBeat":4,"trueTime":1920,"beat":1,"data":[67,96]},{"trueBeat":5,"trueTime":2400,"beat":1,"data":[65,96]},{"trueBeat":6,"trueTime":2880,"beat":1,"data":[64,96]},{"trueBeat":7,"trueTime":3360,"beat":1,"data":[62,96]},{"trueBeat":8,"trueTime":3840,"beat":1,"data":[60,96]},{"trueBeat":9,"trueTime":4320,"beat":1,"data":[60,96]},{"trueBeat":10,"trueTime":4800,"beat":1,"data":[62,96]},{"trueBeat":11,"trueTime":5280,"beat":1,"data":[64,96]},{"trueBeat":12,"trueTime":5760,"beat":1.5,"data":[64,96]},{"trueBeat":13.5,"trueTime":6480,"beat":0.5,"data":[62,96]},{"trueBeat":14,"trueTime":6720,"beat":2,"data":[62,96]},{"trueBeat":16,"trueTime":7680,"beat":1,"data":[64,96]},{"trueBeat":17,"trueTime":8160,"beat":1,"data":[64,96]},{"trueBeat":18,"trueTime":8640,"beat":1,"data":[65,96]},{"trueBeat":19,"trueTime":9120,"beat":1,"data":[67,96]},{"trueBeat":20,"trueTime":9600,"beat":1,"data":[67,96]},{"trueBeat":21,"trueTime":10080,"beat":1,"data":[65,96]},{"trueBeat":22,"trueTime":10560,"beat":1,"data":[64,96]},{"trueBeat":23,"trueTime":11040,"beat":1,"data":[62,96]},{"trueBeat":24,"trueTime":11520,"beat":1,"data":[60,96]},{"trueBeat":25,"trueTime":12000,"beat":1,"data":[60,96]},{"trueBeat":26,"trueTime":12480,"beat":1,"data":[62,96]},{"trueBeat":27,"trueTime":12960,"beat":1,"data":[64,96]},{"trueBeat":28,"trueTime":13440,"beat":1.5,"data":[62,96]},{"trueBeat":29.5,"trueTime":14160,"beat":0.5,"data":[60,96]},{"trueBeat":30,"trueTime":14400,"beat":2,"data":[60,96]},{"trueBeat":32,"trueTime":15360,"beat":1,"data":[62,96]},{"trueBeat":33,"trueTime":15840,"beat":1,"data":[62,96]},{"trueBeat":34,"trueTime":16320,"beat":1,"data":[64,96]},{"trueBeat":35,"trueTime":16800,"beat":1,"data":[60,96]},{"trueBeat":36,"trueTime":17280,"beat":1,"data":[62,96]},{"trueBeat":37,"trueTime":17760,"beat":0.5,"data":[64,96]},{"trueBeat":37.5,"trueTime":18000,"beat":0.5,"data":[65,96]},{"trueBeat":38,"trueTime":18240,"beat":1,"data":[64,96]},{"trueBeat":39,"trueTime":18720,"beat":1,"data":[60,96]},{"trueBeat":40,"trueTime":19200,"beat":1,"data":[62,96]},{"trueBeat":41,"trueTime":19680,"beat":0.5,"data":[64,96]},{"trueBeat":41.5,"trueTime":19920,"beat":0.5,"data":[65,96]},{"trueBeat":42,"trueTime":20160,"beat":1,"data":[64,96]},{"trueBeat":43,"trueTime":20640,"beat":1,"data":[62,96]},{"trueBeat":44,"trueTime":21120,"beat":1,"data":[60,96]},{"trueBeat":45,"trueTime":21600,"beat":1,"data":[62,96]},{"trueBeat":46,"trueTime":23037,"beat":2,"data":["rest",0]},{"trueBeat":48,"trueTime":23040,"beat":1,"data":[64,96]},{"trueBeat":49,"trueTime":23520,"beat":1,"data":[64,96]},{"trueBeat":50,"trueTime":24000,"beat":1,"data":[65,96]},{"trueBeat":51,"trueTime":24480,"beat":1,"data":[67,96]},{"trueBeat":52,"trueTime":24960,"beat":1,"data":[67,96]},{"trueBeat":53,"trueTime":25440,"beat":1,"data":[65,96]},{"trueBeat":54,"trueTime":25920,"beat":1,"data":[64,96]},{"trueBeat":55,"trueTime":26400,"beat":1,"data":[62,96]},{"trueBeat":56,"trueTime":26880,"beat":1,"data":[60,96]},{"trueBeat":57,"trueTime":27360,"beat":1,"data":[60,96]},{"trueBeat":58,"trueTime":27840,"beat":1,"data":[62,96]},{"trueBeat":59,"trueTime":28320,"beat":1,"data":[64,96]},{"trueBeat":60,"trueTime":28800,"beat":1.5,"data":[62,96]},{"trueBeat":61.5,"trueTime":29520,"beat":0.5,"data":[60,96]},{"trueBeat":62,"trueTime":29760,"beat":2,"data":[60,96]}],[{"trueBeat":0,"trueTime":1916,"beat":4,"data":["rest",0]},{"trueBeat":4,"trueTime":3832,"beat":4,"data":["rest",0]},{"trueBeat":8,"trueTime":5748,"beat":4,"data":["rest",0]},{"trueBeat":12,"trueTime":7664,"beat":4,"data":["rest",0]},{"trueBeat":16,"trueTime":9580,"beat":4,"data":["rest",0]},{"trueBeat":20,"trueTime":11496,"beat":4,"data":["rest",0]},{"trueBeat":24,"trueTime":13412,"beat":4,"data":["rest",0]},{"trueBeat":28,"trueTime":15328,"beat":4,"data":["rest",0]},{"trueBeat":32,"trueTime":17244,"beat":4,"data":["rest",0]},{"trueBeat":36,"trueTime":19160,"beat":4,"data":["rest",0]},{"trueBeat":40,"trueTime":21076,"beat":4,"data":["rest",0]},{"trueBeat":44,"trueTime":22080,"beat":2,"data":["rest",0]},{"trueBeat":46,"trueTime":22080,"beat":2,"data":[55,96]}]];
+var midi = [{"deltaTime":0,"type":9,"channel":0,"data":[64,96],"trueTime":0,"trueBeat":0,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":480,"trueBeat":1,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":960,"trueBeat":2,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":1440,"trueBeat":3,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":1920,"trueBeat":4,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":2400,"trueBeat":5,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":2880,"trueBeat":6,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":3360,"trueBeat":7,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":3840,"trueBeat":8,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":4320,"trueBeat":9,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":4800,"trueBeat":10,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":5280,"trueBeat":11,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":5760,"trueBeat":12,"beat":1.5},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":6480,"trueBeat":13.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":6720,"trueBeat":14,"beat":2},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":7680,"trueBeat":16,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":8160,"trueBeat":17,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":8640,"trueBeat":18,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":9120,"trueBeat":19,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":9600,"trueBeat":20,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":10080,"trueBeat":21,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":10560,"trueBeat":22,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":11040,"trueBeat":23,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":11520,"trueBeat":24,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":12000,"trueBeat":25,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":12480,"trueBeat":26,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":12960,"trueBeat":27,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":13440,"trueBeat":28,"beat":1.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":14160,"trueBeat":29.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":14400,"trueBeat":30,"beat":2},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":15360,"trueBeat":32,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":15840,"trueBeat":33,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":16320,"trueBeat":34,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":16800,"trueBeat":35,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":17280,"trueBeat":36,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":17760,"trueBeat":37,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":18000,"trueBeat":37.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":18240,"trueBeat":38,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":18720,"trueBeat":39,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":19200,"trueBeat":40,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":19680,"trueBeat":41,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":19920,"trueBeat":41.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":20160,"trueBeat":42,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":20640,"trueBeat":43,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":21120,"trueBeat":44,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":21600,"trueBeat":45,"beat":1},{"deltaTime":22080,"type":9,"channel":0,"data":[55,96],"trueTime":22080,"trueBeat":46,"beat":2},{"deltaTime":961,"type":9,"channel":0,"data":[64,96],"trueTime":23040,"trueBeat":48,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":23520,"trueBeat":49,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":24000,"trueBeat":50,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":24480,"trueBeat":51,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":24960,"trueBeat":52,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":25440,"trueBeat":53,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":25920,"trueBeat":54,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":26400,"trueBeat":55,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":26880,"trueBeat":56,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":27360,"trueBeat":57,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":27840,"trueBeat":58,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":28320,"trueBeat":59,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":28800,"trueBeat":60,"beat":1.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":29520,"trueBeat":61.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":29760,"trueBeat":62,"beat":2}];
+var event = makeEvents();
+var sfx = {};
+loadSfx();
+var activeNotes = {};
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioCtx = new AudioContext();
+var pianoPlayer = null;
+Soundfont.instrument(audioCtx, "acoustic_grand_piano")
+.then(function(player){
+    pianoPlayer = player;
+    console.log("Piano loaded! 🎹");
+    // playMidi();
+})
+.catch(function(err){
+    console.error("Failed to load piano:", err);
+});
+if (navigator.requestMIDIAccess) {
+    navigator.requestMIDIAccess()
+        .then(onMIDISuccess, onMIDIFailure);
+} else {
+    alert("Web MIDI API is not supported in this browser. Try Chrome, Edge, or Opera.");
+}
+var startButton = document.getElementById("start");
+var beat = 0;
+var timeSig = 4;
 function getNoteInfo(noteNumber) {
     var octave = Math.floor(noteNumber / 12) - 1;
     var noteIndex = noteNumber % 12;
@@ -7,8 +32,8 @@ function getNoteInfo(noteNumber) {
 }
 
 
-function onMIDIMessage(event) {
-    var data = event.data;
+function onMIDIMessage(e) {
+    var data = e.data;
     var command = data[0] >> 4;
     var channel = data[0] & 0xf;
     var noteNumber = data[1];
@@ -19,29 +44,19 @@ function onMIDIMessage(event) {
         var noteInfo = getNoteInfo(noteNumber);
         var message = "Key pressed: " + noteInfo + " (MIDI note " + noteNumber + "), velocity: " + velocity;
         console.log(message);
-        playPianoNote(noteNumber, velocity);
+        event.emit("noteDown", {num: noteNumber, vel: velocity});
+        // playPianoNote(noteNumber, velocity);
     }
     // Note off (or note on with velocity 0)
     else if (command === 8 || (command === 9 && velocity === 0)) {
         var noteInfo = getNoteInfo(noteNumber);
         var message = "Key released: " + noteInfo + " (MIDI note " + noteNumber + ")";
         console.log(message);
+        event.emit("noteUp", {num: noteNumber});
         releasePianoNote(noteNumber);
     }
 }
-var activeNotes = {};
-var AudioContext = window.AudioContext || window.webkitAudioContext;
-var audioCtx = new AudioContext();
-var pianoPlayer = null;
-Soundfont.instrument(audioCtx, "acoustic_grand_piano")
-.then(function(player){
-    pianoPlayer = player;
-    console.log("Piano loaded! 🎹");
-    playMidi();
-})
-.catch(function(err){
-    console.error("Failed to load piano:", err);
-});
+
 var i = -1;
 function playMidi() {
     ++i;
@@ -116,9 +131,98 @@ function onMIDIFailure(error) {
 }
 
 // Check for Web MIDI API support
-if (navigator.requestMIDIAccess) {
-    navigator.requestMIDIAccess()
-        .then(onMIDISuccess, onMIDIFailure);
-} else {
-    alert("Web MIDI API is not supported in this browser. Try Chrome, Edge, or Opera.");
+
+startButton.onclick = startRhythmGame;
+function startRhythmGame() {
+    var ticks = 3;
+    loadRhythmGame(beatTime);
+    makeSong();
+    startTime = Date.now() + beatTime * downBeats;
+    beginListening();
+
+    var int = setInterval(function(){
+        if(ticks > 0) {
+            startButton.textContent = ticks;
+        } else if(ticks > -1) {
+            startButton.textContent = "Go!";
+        } else {
+            startButton.hidden = true;
+        }
+        if(beat === 0) {
+            sfx.met1.play();
+        } else {
+            sfx.met.play();
+        }
+        beat = (beat+1)%timeSig;
+        ticks--;
+    }, beatTime);
+};
+
+
+var startTime = 0;
+var beatTime = 500;
+var downBeats = 9;
+var staff = {
+    offset: 67.5,
+    dist: 32.76
+};
+function beginListening() {
+    event.on("noteDown", judgeNote);
+}
+function makeSong() {
+    var staffEl = cde("img", {src: "/music/song-1.svg"});
+    document.getElementById("staff").appendChild(staffEl);
+    setInterval(function(){
+        var curTime = Date.now() - startTime;
+        var x = staff.offset - (curTime /beatTime) * staff.dist;
+        staffEl.style.transform = "translateX("+x+"px)";
+    },16);
+}
+function judgeNote(e) {
+    var curTime = Date.now() - startTime;
+    var curBeat = curTime / beatTime;
+    var note = findClosestNote(false, curBeat);
+    if(note) {
+        note.played = true;
+        var diff = Math.abs(note.trueBeat - curBeat)
+        var dispEl = document.getElementById("test");
+        if(diff < 0.1) {
+            dispEl.textContent = "Great!" + dispEl.textContent;
+        } else if(diff < 0.2) {
+            dispEl.textContent = "Good" + dispEl.textContent;
+        } else {
+            dispEl.textContent = "Bad" + dispEl.textContent;
+        }
+        event.emit("noteHit", note.beat);
+        playPianoNote(note.data[0], note.data[1]);
+    }
+}
+function findClosestNote(noteId, targetBeat) {
+    var closest = null;
+    var smallestDiff = Infinity;
+    
+    for (var i = 0; i < midi.length; i++) {
+        var note = midi[i];
+        
+        if (noteId && note.data[0] !== noteId) continue;
+        if (note.played) continue;
+      
+        var diff = Math.abs(note.trueBeat - targetBeat);
+        if (diff <= 0.5 && diff < smallestDiff) {
+            smallestDiff = diff;
+            closest = note;
+        }
+    }
+    
+    return closest || false;
+}
+function loadSfx() {
+    sfx.met1 = new Howl({
+        src: ["sounds/met1.mp3"],
+        volume: 0.5,
+    });
+    sfx.met = new Howl({
+        src: ["sounds/met.mp3"],
+        volume: 0.5,
+    });
 }

@@ -281,4 +281,4 @@ function renderNotesToStaff(containerId, voicesData, options) {
   
 //   renderNotesToStaff("staff", notes);
 
-renderNotesToStaff("staff", midi, {scale: 3});
+// renderNotesToStaff("staff", midi, {scale: 3});

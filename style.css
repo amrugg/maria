@@ -1,1 +1,9 @@
- 
+.sprite {
+    width: 96px;
+    height: 96px;
+    object-fit: none; /* Prevents image scaling */
+} 
+body {
+    margin: 0px;
+    padding: 0px;
+}
