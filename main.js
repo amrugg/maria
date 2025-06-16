@@ -213,7 +213,7 @@ function loadSfx() {
         volume: 0.5,
     });
 }
-var scores = ["Joyful, Joyful, We Adore Thee"];
+var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star"];
 function loadPage() {
     var songContainer = cde("div.songContainer");
     page.appendChild(songContainer);
