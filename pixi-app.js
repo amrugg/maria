@@ -17,13 +17,25 @@ var app = new Application({
     }
 );
 app.renderer.backgroundColor = 0x55DD55;
+app.renderer.view.style.position = "absolute";
+app.renderer.view.style.top = "0px";
+app.renderer.view.style.left = "0px";
 /// Fill the screen 
-app.renderer.resize(window.innerWidth, window.innerHeight/2);
+app.renderer.resize(window.innerWidth, window.innerHeight);
 addEventListener("resize", function(){
-    app.renderer.resize(window.innerWidth, window.innerHeight/2);
+    app.renderer.resize(window.innerWidth, window.innerHeight);
 });
 document.body.appendChild(app.view);
-loader.add("sprites/Maria.png").add("sprites/star.png").load(setup);
+var spritesToLoad = ["Maria", "star", "staff.svg"];
+for(let i = 0; i < spritesToLoad.length; i++) {
+    var spriteName = spritesToLoad[i];
+    if(spriteName.includes(".")) {
+        loader.add("sprites/" + spriteName);
+    } else {
+        loader.add("sprites/" + spriteName + ".png");
+    }
+}
+loader.load(setup);
 var state;
 var keys = {};
 var mouseX,mouseY;
@@ -48,8 +60,18 @@ function loadRhythmGame() {
     maria.setAnim(1,4);
     maria.animation.speed = 7;
     event.on("noteHit", function(dur) {
-        maria.vy = -30;
-        maria.sprite.y--;
+        if(maria.sprite.y === bottomY) {
+            maria.vy = -30;
+            maria.sprite.y--;
+        } else {
+            maria
+        }
+    });
+}
+function loadStaffGame() {
+    state = playStaff;
+    spawnHazards(midi, beatTime);
+    event.on("noteHit", function(dur) {
     });
 }
 var hazardSpeed = 200; //pixels per sec
@@ -63,6 +85,7 @@ function spawnHazards(track, beatTime) {
         hazard.anchor.set(0.5);
         hazard.y = bottomY - maria.sprite.height/2 - 32;
         hazard.x = offset + beatCoe * note.trueBeat;
+        hazard.tint = 0xcccccc;
         app.stage.addChild(hazard);
         hazards.push(hazard);
     }
@@ -71,13 +94,14 @@ addEventListener("keypress", function() {
     event.emit("noteHit");
 });
 function gameLoop(delta) {
-    state(delta)
+    state(delta);
+    event.emit("tick");
 }
 var animations = [];
 function wait(){
     
 }
-var gravity = 3.6;
+var gravity = 5.6;
 function playRhythm(dT){
     renderAnims();
     if(maria.sprite.y < bottomY) {
@@ -89,6 +113,9 @@ function playRhythm(dT){
     }
     hazards.forEach(function(hazard) {
         hazard.x -= dT * 1/60 * hazardSpeed;
+        if(hazard.x < maria.sprite.width/2 + 32) {
+            hazard.tint = 0xffffff;
+        }
     });
 }
 function renderAnims() {

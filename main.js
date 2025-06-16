@@ -1,3 +1,4 @@
+var page = document.getElementById("page");
 var noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 var midi = [{"deltaTime":0,"type":9,"channel":0,"data":[64,96],"trueTime":0,"trueBeat":0,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":480,"trueBeat":1,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":960,"trueBeat":2,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":1440,"trueBeat":3,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":1920,"trueBeat":4,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":2400,"trueBeat":5,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":2880,"trueBeat":6,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":3360,"trueBeat":7,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":3840,"trueBeat":8,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":4320,"trueBeat":9,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":4800,"trueBeat":10,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":5280,"trueBeat":11,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":5760,"trueBeat":12,"beat":1.5},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":6480,"trueBeat":13.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":6720,"trueBeat":14,"beat":2},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":7680,"trueBeat":16,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":8160,"trueBeat":17,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":8640,"trueBeat":18,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":9120,"trueBeat":19,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":9600,"trueBeat":20,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":10080,"trueBeat":21,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":10560,"trueBeat":22,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":11040,"trueBeat":23,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":11520,"trueBeat":24,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":12000,"trueBeat":25,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":12480,"trueBeat":26,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":12960,"trueBeat":27,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":13440,"trueBeat":28,"beat":1.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":14160,"trueBeat":29.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":14400,"trueBeat":30,"beat":2},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":15360,"trueBeat":32,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":15840,"trueBeat":33,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":16320,"trueBeat":34,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":16800,"trueBeat":35,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":17280,"trueBeat":36,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":17760,"trueBeat":37,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":18000,"trueBeat":37.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":18240,"trueBeat":38,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":18720,"trueBeat":39,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":19200,"trueBeat":40,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":19680,"trueBeat":41,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":19920,"trueBeat":41.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":20160,"trueBeat":42,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":20640,"trueBeat":43,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":21120,"trueBeat":44,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":21600,"trueBeat":45,"beat":1},{"deltaTime":22080,"type":9,"channel":0,"data":[55,96],"trueTime":22080,"trueBeat":46,"beat":2},{"deltaTime":961,"type":9,"channel":0,"data":[64,96],"trueTime":23040,"trueBeat":48,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":23520,"trueBeat":49,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":24000,"trueBeat":50,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":24480,"trueBeat":51,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":24960,"trueBeat":52,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":25440,"trueBeat":53,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":25920,"trueBeat":54,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":26400,"trueBeat":55,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":26880,"trueBeat":56,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":27360,"trueBeat":57,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":27840,"trueBeat":58,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":28320,"trueBeat":59,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":28800,"trueBeat":60,"beat":1.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":29520,"trueBeat":61.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":29760,"trueBeat":62,"beat":2}];
 var event = makeEvents();
@@ -22,16 +23,14 @@ if (navigator.requestMIDIAccess) {
 } else {
     alert("Web MIDI API is not supported in this browser. Try Chrome, Edge, or Opera.");
 }
-var startButton = document.getElementById("start");
 var beat = 0;
 var timeSig = 4;
+
 function getNoteInfo(noteNumber) {
     var octave = Math.floor(noteNumber / 12) - 1;
     var noteIndex = noteNumber % 12;
     return noteNames[noteIndex] + octave;
 }
-
-
 function onMIDIMessage(e) {
     var data = e.data;
     var command = data[0] >> 4;
@@ -130,31 +129,18 @@ function onMIDIFailure(error) {
     console.log("MIDI Error: " + error);
 }
 
-// Check for Web MIDI API support
-
-startButton.onclick = startRhythmGame;
 function startRhythmGame() {
-    var ticks = 3;
     loadRhythmGame(beatTime);
-    makeSong();
     startTime = Date.now() + beatTime * downBeats;
     beginListening();
 
-    var int = setInterval(function(){
-        if(ticks > 0) {
-            startButton.textContent = ticks;
-        } else if(ticks > -1) {
-            startButton.textContent = "Go!";
-        } else {
-            startButton.hidden = true;
-        }
+    var int = setInterval(function() {
         if(beat === 0) {
             sfx.met1.play();
         } else {
             sfx.met.play();
         }
         beat = (beat+1)%timeSig;
-        ticks--;
     }, beatTime);
 };
 
@@ -169,14 +155,14 @@ var staff = {
 function beginListening() {
     event.on("noteDown", judgeNote);
 }
-function makeSong() {
-    var staffEl = cde("img", {src: "/music/song-1.svg"});
-    document.getElementById("staff").appendChild(staffEl);
-    setInterval(function(){
+function makeSong(song) {
+    var staffEl = cde("img", {src: "/sheets/" + song + ".svg"});
+    page.appendChild(staffEl);
+    event.on("tick", function(){
         var curTime = Date.now() - startTime;
         var x = staff.offset - (curTime /beatTime) * staff.dist;
         staffEl.style.transform = "translateX("+x+"px)";
-    },16);
+    });
 }
 function judgeNote(e) {
     var curTime = Date.now() - startTime;
@@ -185,14 +171,15 @@ function judgeNote(e) {
     if(note) {
         note.played = true;
         var diff = Math.abs(note.trueBeat - curBeat)
-        var dispEl = document.getElementById("test");
-        if(diff < 0.1) {
-            dispEl.textContent = "Great!" + dispEl.textContent;
-        } else if(diff < 0.2) {
-            dispEl.textContent = "Good" + dispEl.textContent;
-        } else {
-            dispEl.textContent = "Bad" + dispEl.textContent;
-        }
+        // var dispEl = cde("div")
+        // page.appendChild(dispEl);
+        // if(diff < 0.1) {
+        //     dispEl.textContent = "Great!" + dispEl.textContent;
+        // } else if(diff < 0.2) {
+        //     dispEl.textContent = "Good" + dispEl.textContent;
+        // } else {
+        //     dispEl.textContent = "Bad" + dispEl.textContent;
+        // }
         event.emit("noteHit", note.beat);
         playPianoNote(note.data[0], note.data[1]);
     }
@@ -226,3 +213,72 @@ function loadSfx() {
         volume: 0.5,
     });
 }
+var scores = ["Joyful, Joyful, We Adore Thee"];
+function loadPage() {
+    var songContainer = cde("div.songContainer");
+    page.appendChild(songContainer);
+    scores.forEach(function(song) {
+        songContainer.appendChild(cde("button.song", 
+            {t: song, onclick: function() {
+                songContainer.remove();
+                playSong(song);
+            }}
+        ))
+    });
+}
+function getJson(url, cb, method, data)
+{
+    var req = new XMLHttpRequest();
+    
+    req.open(method || "GET", url);
+    
+    ///NOTE: If we set this to JSON, it will try to parse the post data, which we don't want.
+    req.setRequestHeader("Content-Type", "application/octet-stream");
+    
+    req.send(data);
+    
+    req.onload = function ()
+    {
+        var contentType = req.getResponseHeader("Content-Type");
+        var res;
+        
+        if (/^application\/json/i.test(contentType)) {
+            try {
+                res = JSON.parse(req.responseText);
+            } catch (e) {}
+        } else {
+            ///TODO: Binary?
+            res = req.responseText;
+        }
+        
+        /* istanbul ignore if */
+        if (req.status >= 400) {
+            //cb({err: "request failed", status: req.status}, res);
+            cb(res && res.err ? res : {err: "request failed", status: req.status}, res);
+        } else {
+            cb(null, res);
+        }
+    };
+    /* istanbul ignore next */
+    req.onerror = function (err)
+    {
+        cb({err: "network error", message: err});
+    };
+    
+    cb = cb || function () {};
+};
+function playSong(song) {
+    var loading = 0;
+    var maxLoad = 2;
+    
+    makeSong(song);
+    getJson("/music/" + song + ".json", function(err, json) {
+        if(err) {
+            console.error(err);
+        } else {
+            midi = json;
+            startRhythmGame();
+        }
+    });
+}
+loadPage();
