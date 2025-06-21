@@ -26,7 +26,7 @@ addEventListener("resize", function(){
     app.renderer.resize(window.innerWidth, window.innerHeight);
 });
 document.body.appendChild(app.view);
-var spritesToLoad = ["Maria", "star", "staff.svg"];
+var spritesToLoad = ["Maria", "star", "projectile-fireball", "staff.svg"];
 for(let i = 0; i < spritesToLoad.length; i++) {
     var spriteName = spritesToLoad[i];
     if(spriteName.includes(".")) {
@@ -45,7 +45,10 @@ function setup() {
 }
 var maria;
 var bottomY = innerHeight/2 - 50;
-function loadRhythmGame() {
+var hazardSpeed = 200; //pixels per sec
+var hazards = [];
+var stars = [];
+function loadRhythmGame(midi, beatTime) {
     state = playRhythm;
     maria = createAnimatedSprite("Maria");
     var ghostStar = new Sprite(resources["sprites/star.png"].texture);
@@ -59,39 +62,178 @@ function loadRhythmGame() {
     maria.goto(maria.sprite.width/2, bottomY);
     maria.setAnim(1,4);
     maria.animation.speed = 7;
-    event.on("noteHit", function(dur) {
-        if(maria.sprite.y === bottomY) {
+    event.on("noteHit", function(note) {
+        if(maria.sprite.y === bottomY || true) {
             maria.vy = -30;
             maria.sprite.y--;
         } else {
-            maria
+            
         }
     });
+
 }
 function loadStaffGame() {
     state = playStaff;
-    spawnHazards(midi, beatTime);
-    event.on("noteHit", function(dur) {
+    lastCheckedIndex = 0;
+    event.on("noteHit", function(note) {
+        makeStar(note.data[0]);
     });
 }
-var hazardSpeed = 200; //pixels per sec
-var hazards = [];
+function makeStar(num) {
+    var star = new Sprite(resources["sprites/star.png"].texture);
+    star.anchor.set(0.5,0.5);
+    star.x = -50;
+    star.y = getNoteYPosition(num);
+    app.stage.addChild(star);
+    stars.push(star);
+}
+var lastCheckedIndex = 0;
+function playStaff(dT) {
+    var dTime = dT * 1/60;
+    var curTime = Date.now() - startTime;
+    var curBeat = curTime / beatTime;
+    checkForNewHazards(curBeat);
+    hazards.forEach(function(hazard) {
+        if(hazard.moving === false) return;
+        hazard.x -= dTime * hazardSpeed;
+    });
+    renderAnims();
+}
+function checkForNewHazards(curBeat) {
+    for(var i = lastCheckedIndex; i < midi.length; i++) {
+        var note = midi[i];
+        if(note.trueBeat < curBeat) {
+            ++lastCheckedIndex;
+            spawnStaffHazard(note);
+        } else {
+            return;
+        }
+    }
+}
+
+function getNoteYPosition(noteNum) {
+    var noteString = getNoteInfo(noteNum);
+    console.log(noteString);
+    
+    var noteMap = {
+        'C': 0, 'D': 1, 'E': 2, 'F': 3, 'G': 4, 'A': 5, 'B': 6
+    };
+
+    var match = noteString.match(/([A-G])(?:[b#])?(\d+)/);
+
+    if (!match) {
+        return null;
+    }
+
+    var noteLetter = match[1];
+    var octave = parseInt(match[2], 10);
+
+    var targetNoteIndex = noteMap[noteLetter];
+    var targetStepValue = (octave * 7) + targetNoteIndex;
+
+    // Define middle C step value for comparison
+    var middleCStepValue = (4 * 7) + noteMap['C']; // C4
+
+    if (targetStepValue < middleCStepValue) {
+        // Use bass clef reference: A3 at staffProps.offset2
+        var referenceNoteLetter = 'A';
+        var referenceOctave = 3;
+        var referenceYPosition = staffProps.offset2;
+        --targetStepValue;
+    } else {
+        // Use treble clef reference: F5 at staffProps.offset1
+        var referenceNoteLetter = 'F';
+        var referenceOctave = 5;
+        var referenceYPosition = staffProps.offset1;
+    }
+
+    var referenceNoteIndex = noteMap[referenceNoteLetter];
+    var referenceStepValue = (referenceOctave * 7) + referenceNoteIndex;
+
+    var yPosition = referenceYPosition + (referenceStepValue - targetStepValue) * staffProps.gap * 0.5;
+
+    return yPosition;
+}
+
+
+function spawnStaffHazard(note) {
+    var hazard = createAnimatedSprite("projectile-fireball", 144);
+    app.stage.addChild(hazard.sprite)
+    hazard.sprite.rotation = Math.PI/2;
+    hazard.goto(innerWidth + hazard.sprite.width, getNoteYPosition(note.data[0]) * staffProps.scale);
+    hazard.setAnim(0,7);
+    hazard.animation.speed = 7;
+    hazards.push(hazard.sprite);
+}
 function spawnHazards(track, beatTime) {
     var beatCoe = hazardSpeed * beatTime / 1000;
     var offset = downBeats * beatCoe + maria.sprite.width/2;
+    var doubleJumpOffset = 24;
+    var doubleBeats = 0;
     for(var i = 0; i < track.length; i++) {
         var note = track[i];
         var hazard = new Sprite(resources["sprites/star.png"].texture);
         hazard.anchor.set(0.5);
-        hazard.y = bottomY - maria.sprite.height/2 - 32;
+        hazard.y = bottomY - maria.sprite.height/2 - 32 - doubleBeats * doubleJumpOffset;
         hazard.x = offset + beatCoe * note.trueBeat;
+        if(note.beat <= 0.5) {
+            // doubleBeats++;
+        } else {
+            // doubleBeats = Math.max(0, doubleBeats-1);
+        }
         hazard.tint = 0xcccccc;
+        note.hazard = hazard;
         app.stage.addChild(hazard);
         hazards.push(hazard);
     }
 }
+function animGreat(hazard) {
+    function anim() {
+        if(hazard.alpha <= 0) {
+            app.stage.removeChild(hazard);
+            event.off("tick", anim);
+        } else {
+            hazard.alpha -= 0.03;
+            hazard.rotation += 0.1;
+            hazard.scale.x += 0.1;
+            hazard.scale.y += 0.1;
+        }
+    }
+    event.on("tick", anim);
+}
+function animGood(hazard) {
+    var tick = 0;
+    hazard.tint = 0xffffff;
+    function anim() {
+        if(tick > 60) {
+            app.stage.removeChild(hazard);
+            event.off("tick", anim);
+        } else {
+            hazard.rotation += 2*Math.PI/60;
+        }
+    }
+    event.on("tick", anim);
+}
+function animBad(hazard) {
+    hazard.moving = false;
+    hazard.vx = 5;
+    hazard.vy = -10;
+    function anim() {
+        if(hazard.y > bottomY + 60) {
+            app.stage.removeChild(hazard);
+            event.off("tick", anim);
+        } else {
+            hazard.x += hazard.vx;
+            hazard.vx *= 0.9;
+            hazard.y += hazard.vy;
+            hazard.vy += 0.7;
+        }
+    }
+    event.on("tick", anim);
+}
 addEventListener("keypress", function() {
     event.emit("noteHit");
+    judgeNote();
 });
 function gameLoop(delta) {
     state(delta);
@@ -103,6 +245,7 @@ function wait(){
 }
 var gravity = 5.6;
 function playRhythm(dT){
+    var dTime = dT * 1/60;
     renderAnims();
     if(maria.sprite.y < bottomY) {
        maria.sprite.y += maria.vy;
@@ -112,10 +255,11 @@ function playRhythm(dT){
         maria.sprite.y = bottomY;
     }
     hazards.forEach(function(hazard) {
-        hazard.x -= dT * 1/60 * hazardSpeed;
-        if(hazard.x < maria.sprite.width/2 + 32) {
-            hazard.tint = 0xffffff;
-        }
+        if(hazard.moving === false) return;
+        hazard.x -= dTime * hazardSpeed;
+    });
+    stars.forEach(function(star) {
+        star.x += dTime * 400;
     });
 }
 function renderAnims() {

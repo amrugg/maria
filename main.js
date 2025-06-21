@@ -130,7 +130,7 @@ function onMIDIFailure(error) {
 }
 
 function startRhythmGame() {
-    loadRhythmGame(beatTime);
+    loadRhythmGame(midi, beatTime);
     startTime = Date.now() + beatTime * downBeats;
     beginListening();
 
@@ -143,19 +143,34 @@ function startRhythmGame() {
         beat = (beat+1)%timeSig;
     }, beatTime);
 };
+var staffProps = {
+    offset1: 9.5,
+    gap: 6.6,
+    offset2: 76,
+    scale: 1
+}
 
+function startStaffGame() {
+
+    startTime = Date.now() + beatTime * downBeats;
+    var staff = cde("img.staff", {src: "sprites/staff.svg", style: {height: "90%"}});
+    page.appendChild(staff);
+    staffProps.scale = staff.clientHeight/staff.naturalHeight;
+    loadStaffGame(midi, staffProps, beatTime);
+}
 
 var startTime = 0;
 var beatTime = 500;
-var downBeats = 9;
-var staff = {
-    offset: 67.5,
-    dist: 32.76
-};
+var downBeats = -1;
+
 function beginListening() {
     event.on("noteDown", judgeNote);
 }
 function makeSong(song) {
+    var staff = {
+        offset: 67.5,
+        dist: 32.76
+    };
     var staffEl = cde("img", {src: "/sheets/" + song + ".svg"});
     page.appendChild(staffEl);
     event.on("tick", function(){
@@ -171,16 +186,16 @@ function judgeNote(e) {
     if(note) {
         note.played = true;
         var diff = Math.abs(note.trueBeat - curBeat)
-        // var dispEl = cde("div")
-        // page.appendChild(dispEl);
-        // if(diff < 0.1) {
-        //     dispEl.textContent = "Great!" + dispEl.textContent;
-        // } else if(diff < 0.2) {
-        //     dispEl.textContent = "Good" + dispEl.textContent;
-        // } else {
-        //     dispEl.textContent = "Bad" + dispEl.textContent;
-        // }
-        event.emit("noteHit", note.beat);
+        var dispEl = cde("div")
+        page.appendChild(dispEl);
+        if(diff < 0.1) {
+            animGreat(note.hazard);
+        } else if(diff < 0.2) {
+            animGood(note.hazard);
+        } else {
+            animBad(note.hazard);
+        }
+        event.emit("noteHit", note);
         playPianoNote(note.data[0], note.data[1]);
     }
 }
@@ -271,13 +286,14 @@ function playSong(song) {
     var loading = 0;
     var maxLoad = 2;
     
-    makeSong(song);
     getJson("/music/" + song + ".json", function(err, json) {
         if(err) {
             console.error(err);
         } else {
             midi = json;
-            startRhythmGame();
+            // makeSong(song);
+            // startRhythmGame();
+            startStaffGame();
         }
     });
 }
