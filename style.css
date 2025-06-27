@@ -14,20 +14,20 @@ body {
 
 
 .songContainer {
+    --song-x: 1290px; /* Default value for --x */
     display: flex;
-    overflow-x: auto;
+    overflow-x: visible;
     gap: 80px;
     scrollbar-width: none;
     -ms-overflow-style: none;
     scroll-behavior: smooth;
-    padding: 0 40px;
     position: absolute;
     top: 50%;
     left: 50%;
     opacity: 1;
     
     transition: all 0.3s ease;
-    transform: translate(-50%, -50%);
+    transform: translate(var(--song-x), -50%);
     height: 500px;
     width: 100%; /* Add this */
     justify-content: flex-start; /* Change to flex-start */
@@ -38,21 +38,24 @@ body {
 }
 
 .songContainer.hide {
-    transform: translate(-50%, 15%);
+    transform: translate(var(--song-x), -15%);
     opacity: 0;
+}
+.songContainer.select-mode {
+    transform: translate(var(--song-x), -20%);
 }
 .panel {
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
-    height: 250px;
+    height: 300px;
     background: #fff;
     border-radius: 12px;
     opacity: 1;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     min-width: max(25vw, 300px);
-    padding: -5px;
+    padding: 5px 20px;
     text-align: center;
 }
 .panel.hide {

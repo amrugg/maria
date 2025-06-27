@@ -51,6 +51,7 @@ var hazardSpeed = 200; //pixels per sec
 var hazards = [];
 var stars = [];
 function loadRhythmGame(midi, beatTime) {
+    hazardSpeed = 200 * 500/beatTime;
     state = playRhythm;
     maria = createAnimatedSprite("Maria");
     var ghostStar = new Sprite(resources["sprites/star.png"].texture);

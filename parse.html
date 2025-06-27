@@ -16,10 +16,10 @@
             // provide the File source and a callback function
             var text;
 
-            var wholeBeatLength;
+            var wholeBeatLength = 480 * 4;
             function processBeat(curBeatLength) {
                 if (typeof wholeBeatLength !== 'number') {
-                    wholeBeatLength = 4* (curBeatLength+1) / (prompt("How many beats does the first note receive? (e.g. 4 for a whole note, 1.5 for a dotted quarter, 0.5 for an 8th note)") || 1);
+                    wholeBeatLength = 4* (curBeatLength+25) / (prompt("How many beats does the first note receive? (e.g. 4 for a whole note, 1.5 for a dotted quarter, 0.5 for an 8th note)") || 1);
                     beatListeners.forEach(function(func){func()});
                 }
 
@@ -28,7 +28,7 @@
                 ratio /= 1/16;
                 ratio = Math.round(ratio);
                 ratio *= 1/16;
-                return ratio;
+                return ratio * (1/0.9375);
             }
             var beatsPerMeasure = 4;
             var beatListeners = [];
@@ -38,9 +38,27 @@
                 var track = obj.track;
                 var melody = [];
                 var harmony = [];
+                function inMelody(beat) {
+                    for(var i = 0; i < melody.length; i++) {
+                        if(melody[i].trueBeat === beat) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                function addNotesToTrack(notes) {
+                    notes.forEach(function(note) {
+                        if(inMelody(note.trueBeat)) {
+                            harmony.push(note);
+                        } else {
+                            melody.push(note);
+                        }
+                    });
+                }
                 track.forEach(function(t, trackIndex){
                     var trueTime = 0;
                     var notes = t.event;
+                    console.log(notes);
                     var noteOnListen = {};
                     var lastNoteEndTime = 0;
                     var curBeat = 0;
@@ -85,18 +103,12 @@
                             noteOnListen[note.data[0]] = note;
                         }
                     }
-                    if(trackIndex === 0) {
-                        melody = notes;
-                    } else if(document.getElementById("one-track").checked) {
-                        melody = melody.concat(notes);
-                    } else {
-                        harmony = notes;
-                    }
+                    addNotesToTrack(notes);
                 });
                 button.hidden = false;
                 button.textContent = "Click to copy";
                 button.onclick = function(){
-                    navigator.clipboard.writeText(JSON.stringify({melody, harmony}));
+                    navigator.clipboard.writeText(JSON.stringify({melody, harmony, bpm: Number(prompt("What is the BPM for this song?")) || 120}));
                 }
             });
             function createRestNotes(totalDuration, startTime, maxBeats, curBeat) {

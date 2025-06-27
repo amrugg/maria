@@ -46,6 +46,7 @@ function onMIDIMessage(e) {
         var noteInfo = getNoteInfo(noteNumber);
         var message = "Key pressed: " + noteInfo + " (MIDI note " + noteNumber + "), velocity: " + velocity;
         // console.log(message);
+        console.log("noteDown");
         event.emit("noteDown", {num: noteNumber, vel: velocity});
         if(freePlay) {
             playPianoNote(noteNumber, velocity);
@@ -225,6 +226,7 @@ function listen(e) {
 function beginListening(options) {
     listen.options = options;
     event.on("noteDown", listen);
+    event.on("gameEnd", endListening);
 }
 function endListening() {
     event.off("noteDown", listen);
@@ -276,15 +278,19 @@ function judgeNote(e, options) {
         var dispEl = cde("div")
         page.appendChild(dispEl);
         var score = "bad";
-        if(diff < 0.1) {
+        if(diff < 0.1 * (500/beatTime)) {
+            console.log("Great", diff);
             score = "great";
-        } else if(diff < 0.2) {
+        } else if(diff < 0.2 * (500/beatTime)) {
+            console.log("good", diff);
             score = "good";
+        } else {
+            console.log("bad", diff);
         }
         if(options.cb) {
             options.cb(score, note);
         }
-        console.log("Played Note", ...note.data, note.beat * beatTime / 1000);
+        // console.log("Played Note", ...note.data, note.beat * beatTime / 1000);
         if(gameMode !== "play") {
             playPianoNote(note.data[0], note.data[1], note.beat * beatTime / 1000);
         }
@@ -321,7 +327,7 @@ function loadSfx() {
         volume: 0.5,
     });
 }
-var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Mary Had a Little Lamb", "Old MacDonald Had a Farm"];
+var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Mary Had a Little Lamb", "Old MacDonald Had a Farm", "Minuet in G", "Symphony of Fate"];
 function loadPage() {
     loadMenu();
 }
@@ -333,35 +339,41 @@ var games = {
 
 function loadMenu() {
     function loadPanel(song) {
-        var panel = cde("div.panel", [
-            cde("h1", {t: song}),
-        ]);
+        activePanel.textContent = "";
+        activePanel.appendChild(cde("h2", {t: song}));
         var modes = ["Rhythm", "Staff", "Master"];
-        var colors = ["green", "red", "blue"]
+        var colors = ["green", "red", "blue"];
+        var keys = ["C", "E", "G"];
         for(var i = 0; i < modes.length; i++) {
             var starHolder = cde("div.starHolder");
             var button = cde("button.panel-button " + colors[i] + "-button", [
-                modes[i],
+                modes[i] + " (" + keys[i] + ")",
                 starHolder
             ]);
             var prof = Number(localStorage.getItem(song + "-" + modes[i]));
             for(var j = 0; j < 3; j++) {
                 starHolder.appendChild(cde("img" + (prof > j ? "" : ".empty"), {src: "sprites/star.png"}));
             }
-            panel.appendChild(button);
+            activePanel.appendChild(button);
             let mode = modes[i];
             button.addEventListener("click", function() {
-                panel.classList.add("hide");
-                songContainer.classList.add("hide");
-                setTimeout(function(){
-                    panel.remove();
-                    songContainer.remove();
-                    playSong(song, mode);
-                }, 1000);
+                chooseSong(song, mode);
             });
         }
-        page.appendChild(panel);
     }
+    function chooseSong(song, mode) {
+        activePanel.classList.add("hide");
+        songContainer.classList.add("hide");
+        setTimeout(function(){
+            activePanel.remove();
+            songContainer.remove();
+            playSong(song, mode);
+        }, 300);
+        event.off("noteDown", midiMenu);
+    }
+    var songSelected = false;
+    var activePanel = cde("div.panel hide");
+    page.appendChild(activePanel);
     gameMode = "menu";
     freePlay = true;
     var songContainer = cde("div.songContainer");
@@ -390,10 +402,32 @@ function loadMenu() {
         } else if(e.key === "ArrowLeft") {
             selectLeft();
         } else if(e.key === " ") {
-            selectCurrentItem(scores[currentIndex]);
+            toggleCurrentItem();
         }
-    })
-    
+    });
+    function midiMenu(note) {
+        if(songSelected) {
+            var noteInfo = getNoteInfo(note.num);
+            if(noteInfo[0] === "C") {
+                chooseSong(scores[currentIndex], "Rhythm");
+            } else if(noteInfo[0] === "E") {
+                chooseSong(scores[currentIndex], "Staff");
+            } else if(noteInfo[0] === "G") {
+                chooseSong(scores[currentIndex], "Master");
+            } else {
+                deselectSong();
+            }
+        } else {
+            if(note.num > 60) {
+                selectRight();
+            } else if(note.num < 60) {
+                selectLeft();
+            } else {
+                selectSong();
+            }
+        }
+    }
+    event.on("noteDown", midiMenu);
 
     function selectLeft() {
         if (currentIndex > 0) {
@@ -453,18 +487,32 @@ function loadMenu() {
             itemPosition += items[i].offsetWidth + itemMargin;
         }
 
-        // Calculate scroll position to center this item
-        var scrollPosition = itemPosition - (containerWidth / 2) + (itemWidth / 2);
-
-        // Perform the scroll
-        songContainer.scrollTo({
-            left: scrollPosition + 35,
-            behavior: "smooth"
-        });
+        // Calculate position to center this item
+        var scrollPosition = itemPosition - (containerWidth / 2) + (itemWidth / 2) + (innerWidth/2 );
+        songContainer.style.setProperty("--song-x", -scrollPosition + "px");
     }
-    function selectCurrentItem(song) {
-        songContainer.classList.toggle("select-mode");
-        loadPanel(song);
+    function selectSong() {
+        var song = scores[currentIndex];
+        if(!songSelected) {
+            songSelected = true;
+            activePanel.classList.remove("hide");
+            songContainer.classList.add("select-mode");
+            loadPanel(song);
+        }
+    }
+    function deselectSong() {
+        if(songSelected) {
+            songSelected = false;
+            songContainer.classList.remove("select-mode");
+            activePanel.classList.add("hide");
+        }
+    }
+    function toggleCurrentItem(song) {
+        if(songSelected) {
+            deselectSong();
+        } else {
+            selectSong();
+        }
     }
 }
 function getJson(url, cb, method, data)
@@ -517,6 +565,7 @@ function playSong(song, mode) {
             console.error(err);
         } else {
             midi = json;
+            beatTime = 1000/ (midi.bpm/60) || 500;
             midiWhole = midi.melody.concat(midi.harmony);
             midiWhole.sort(function(a,b) {
                 return a.trueBeat - b.trueBeat;
