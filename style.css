@@ -8,6 +8,13 @@ body {
     padding: 0px;
     overflow: hidden;
 }
+.vbl {
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    top: 0;
+    background-color: #3333AAaa;
+}
 #page {
     z-index: 100;
     width: 100%;

@@ -129,10 +129,31 @@ function onMIDIFailure(error) {
     console.log("MIDI Error: " + error);
 }
 
-function startRhythmGame() {
+function startRhythmGame(song) {
+    makeSong(song);
     loadRhythmGame(midi, beatTime);
     startTime = Date.now() + beatTime * downBeats;
-    beginListening();
+    beginListening({matchNote: false, cb: function() {
+        event.emit("jump")
+    }});
+
+    var int = setInterval(function() {
+        if(beat === 0) {
+            sfx.met1.play();
+        } else {
+            sfx.met.play();
+        }
+        beat = (beat+1)%timeSig;
+    }, beatTime);
+};
+function startSongPlay(song) {
+    makeSong(song, 50);
+    loadStarFX();
+    // loadRhythmGame(midi, beatTime);
+    startTime = Date.now() + beatTime * downBeats;
+    beginListening({matchNote: true, cb: function(score) {
+        event.emit("stars", score)
+    }});
 
     var int = setInterval(function() {
         if(beat === 0) {
@@ -153,7 +174,7 @@ var staffProps = {
 function startStaffGame() {
 
     startTime = Date.now() + beatTime * downBeats;
-    var staff = cde("img.staff", {src: "sprites/staff.svg", style: {height: "90%"}});
+    var staff = cde("img.staff", {src: "sprites/staff.svg", style: {height: "90%", zIndex: 0}});
     page.appendChild(staff);
     staffProps.scale = staff.clientHeight/staff.naturalHeight;
     loadStaffGame(midi, staffProps, beatTime);
@@ -161,42 +182,66 @@ function startStaffGame() {
 
 var startTime = 0;
 var beatTime = 500;
-var downBeats = -1;
+var downBeats = 5;
 
-function beginListening() {
-    event.on("noteDown", judgeNote);
+function beginListening(options) {
+    event.on("noteDown", function(e) {
+        console.log(e)
+        judgeNote(e, options);
+    });
 }
-function makeSong(song) {
+function makeSong(song, scale = 20) {
+    var vblOffset = 100;
     var staff = {
         offset: 67.5,
-        dist: 32.76
+        dist: 32.76,
+        scale: 1,
     };
     var staffEl = cde("img", {src: "/sheets/" + song + ".svg"});
     page.appendChild(staffEl);
+    if(scale) {
+        staffEl.style.height = scale + "%";
+    }
     event.on("tick", function(){
+        if(staff.scale === 1) {
+            staff.scale = staffEl.offsetHeight/staffEl.naturalHeight;
+        }
         var curTime = Date.now() - startTime;
-        var x = staff.offset - (curTime /beatTime) * staff.dist;
+        var x = (-(curTime /beatTime) * staff.dist - staff.offset) * staff.scale + vblOffset;
         staffEl.style.transform = "translateX("+x+"px)";
     });
+    var vbl = cde("div.vbl", {style: {left: vblOffset + "px"}});
+    page.appendChild(vbl);
 }
-function judgeNote(e) {
+function judgeNote(e, options) {
     var curTime = Date.now() - startTime;
     var curBeat = curTime / beatTime;
-    var note = findClosestNote(false, curBeat);
+    if(options.matchNote) {
+        var note = findClosestNote(e.num, curBeat);
+    } else {
+        var note = findClosestNote(false, curBeat);
+    }
     if(note) {
         note.played = true;
         var diff = Math.abs(note.trueBeat - curBeat)
         var dispEl = cde("div")
         page.appendChild(dispEl);
+        var score = "bad";
         if(diff < 0.1) {
             animGreat(note.hazard);
+            score = "great";
         } else if(diff < 0.2) {
             animGood(note.hazard);
+            score = "good";
         } else {
             animBad(note.hazard);
         }
-        event.emit("noteHit", note);
+        if(options.cb) {
+            options.cb(score);
+        }
         playPianoNote(note.data[0], note.data[1]);
+
+        event.emit("noteHit", note);
     }
 }
 function findClosestNote(noteId, targetBeat) {
@@ -291,10 +336,11 @@ function playSong(song) {
             console.error(err);
         } else {
             midi = json;
-            // makeSong(song);
-            // startRhythmGame();
+            // startRhythmGame(song);
             startStaffGame();
+            // startSongPlay(song);
         }
     });
 }
 loadPage();
+/// 
