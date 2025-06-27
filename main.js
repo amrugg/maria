@@ -142,10 +142,11 @@ function startRhythmGame(song) {
     event.on("noteHit", rhythmAnim);
     loadRhythmGame(midi, beatTime);
     startTime = Date.now() + beatTime * downBeats;
-    beginListening({matchNote: false, cb: function() {
-        event.emit("jump")
+    beginListening({matchNote: false, cb: function(score, note) {
+        event.emit("jump", {score: score, note: note})
     }});
 
+    event.on("tick", checkForMissedRhythm);
     var int = setInterval(function() {
         if(beat === 0) {
             sfx.met1.play();
@@ -158,10 +159,37 @@ function startRhythmGame(song) {
 
     event.on("gameEnd", function() {
         event.off("noteHit", rhythmAnim);
+        event.off("tick", checkForMissedRhythm);
         clearInterval(int);
 
     });
 };
+function checkForMissedRhythm() {
+    var curTime = Date.now() - startTime;
+    var curBeat = curTime / beatTime;
+    midi.melody.forEach(function(note) {
+        if(!note.played && note.trueBeat < curBeat - 0.5) {
+            note.played = true;
+            event.emit("noteMissed");
+        }
+    });
+    midi.harmony.forEach(function(note) {
+        if(!note.played && note.trueBeat <= curBeat) {
+            note.played = true;
+            playPianoNote(note.data[0], note.data[1], note.beat * beatTime / 1000);
+        }
+    });
+}
+function checkForMissedWhole() {
+    var curTime = Date.now() - startTime;
+    var curBeat = curTime / beatTime;
+    midiWhole.forEach(function(note) {
+        if(!note.played && note.trueBeat < curBeat - 0.5) {
+            note.played = true;
+            event.emit("noteMissed");
+        }
+    });
+}
 function scheduleEnd(end) {
     setTimeout(end, (midiWhole.at(-1).trueBeat + midiWhole.at(-1).beat + 8) * beatTime);
 }
@@ -169,18 +197,25 @@ function endRhythmGame() {
     if(Date.now() - startTime < midiWhole.at(-1).trueBeat * beatTime) {
         return scheduleEnd(endRhythmGame);
     }
-    event.emit("gameEnd");
-    loadMenu();
+    event.emit("sceneEnd");
+}
+function endSongPlay() {
+    debugger
+    if(Date.now() - startTime < midiWhole.at(-1).trueBeat * beatTime) {
+        return scheduleEnd(endSongPlay);
+    }
+    event.emit("sceneEnd");
 }
 function endStaffGame() {
     if(Date.now() - startTime < midiWhole.at(-1).trueBeat * beatTime) {
         return scheduleEnd(endStaffGame);
     }
-    event.emit("gameEnd");
-    loadMenu();
+    event.emit("sceneEnd");
 }
 function startSongPlay(song) {
-    makeSong(song, 50, true);
+
+    event.on("tick", checkForMissedWhole);
+    makeSong(song, 50, true).style.top = innerWidth/4 + "px";
     loadStarFX();
     startTime = Date.now() + beatTime * downBeats;
     beginListening({matchNote: true, cb: function(score, note) {
@@ -195,6 +230,12 @@ function startSongPlay(song) {
         }
         beat = (beat+1)%timeSig;
     }, beatTime);
+
+    event.on("gameEnd", function() {
+        event.off("tick", checkForMissedWhole);
+        clearInterval(int);
+    });
+    scheduleEnd(endSongPlay);
 };
 var staffProps = {
     offset1: 9.5,
@@ -327,7 +368,7 @@ function loadSfx() {
         volume: 0.5,
     });
 }
-var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Mary Had a Little Lamb", "Old MacDonald Had a Farm", "Minuet in G", "Symphony of Fate"];
+var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Mary Had a Little Lamb", "Old MacDonald Had a Farm", "Minuet in G", "Row, Row, Row Your Boat", "Symphony of Fate"];
 function loadPage() {
     loadMenu();
 }
@@ -337,10 +378,14 @@ var games = {
     "Master": startSongPlay
 }
 
-function loadMenu() {
-    function loadPanel(song) {
+function loadMenu(data) {
+    function loadPanel(song, data) {
         activePanel.textContent = "";
-        activePanel.appendChild(cde("h2", {t: song}));
+        if(data) {
+            activePanel.appendChild(cde("h2", {t: "You earned " + data.level + " stars!"}));
+        } else {
+            activePanel.appendChild(cde("h2", {t: song}));
+        }
         var modes = ["Rhythm", "Staff", "Master"];
         var colors = ["green", "red", "blue"];
         var keys = ["C", "E", "G"];
@@ -389,11 +434,28 @@ function loadMenu() {
         items.push(item);
         if(Math.floor(scores.length/2) === i) {
             currentIndex = i;
-            item.classList.add("selected");
         }
         songContainer.appendChild(item);
     });
-    centerItem(currentIndex);
+    if(!data) {
+        centerItem(currentIndex);
+        items[currentIndex].classList.add("selected");
+    } else {
+        var key = activeSong.song + "-" + activeSong.mode;
+        var lastConfig = localStorage.getItem(key);
+        if(lastConfig < data.level) {
+            localStorage.setItem(key, data.level);
+        }
+        for(var i = 0; i < scores.length; i++) {
+            if(scores[i] === activeSong.song) {
+                currentIndex = i;
+                break;
+            }
+        }
+        centerItem(currentIndex);
+        items[currentIndex].classList.add("selected");
+        setTimeout(selectSong, 100, data)
+    }
     addEventListener("keydown", function(e) {
         if(gameMode !== "menu") return;
 
@@ -491,13 +553,13 @@ function loadMenu() {
         var scrollPosition = itemPosition - (containerWidth / 2) + (itemWidth / 2) + (innerWidth/2 );
         songContainer.style.setProperty("--song-x", -scrollPosition + "px");
     }
-    function selectSong() {
+    function selectSong(data) {
         var song = scores[currentIndex];
         if(!songSelected) {
             songSelected = true;
             activePanel.classList.remove("hide");
             songContainer.classList.add("select-mode");
-            loadPanel(song);
+            loadPanel(song, data);
         }
     }
     function deselectSong() {
@@ -559,7 +621,7 @@ function getJson(url, cb, method, data)
 function playSong(song, mode) {
     var loading = 0;
     var maxLoad = 2;
-    
+    activeSong = {song, mode};
     getJson("/music/" + song + ".json", function(err, json) {
         if(err) {
             console.error(err);
@@ -571,7 +633,11 @@ function playSong(song, mode) {
                 return a.trueBeat - b.trueBeat;
             })
             games[mode](song);
+            event.once("gameEnd", function(data) {
+                loadMenu(data);
+            });
         }
     });
 }
+var activeSong = {};
 loadPage();

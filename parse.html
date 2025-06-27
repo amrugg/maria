@@ -16,7 +16,7 @@
             // provide the File source and a callback function
             var text;
 
-            var wholeBeatLength = 480 * 4;
+            var wholeBeatLength// = 480 * 4;
             function processBeat(curBeatLength) {
                 if (typeof wholeBeatLength !== 'number') {
                     wholeBeatLength = 4* (curBeatLength+25) / (prompt("How many beats does the first note receive? (e.g. 4 for a whole note, 1.5 for a dotted quarter, 0.5 for an 8th note)") || 1);
@@ -108,7 +108,7 @@
                 button.hidden = false;
                 button.textContent = "Click to copy";
                 button.onclick = function(){
-                    navigator.clipboard.writeText(JSON.stringify({melody, harmony, bpm: Number(prompt("What is the BPM for this song?")) || 120}));
+                    navigator.clipboard.writeText(JSON.stringify({melody, harmony, bpm: Number(prompt("What is the BPM for this song?")) || 120, sig: beatsPerMeasure}));
                 }
             });
             function createRestNotes(totalDuration, startTime, maxBeats, curBeat) {

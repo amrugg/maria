@@ -28,7 +28,7 @@ addEventListener("resize", function(){
     app.renderer.resize(window.innerWidth, window.innerHeight);
 });
 document.body.appendChild(app.view);
-var spritesToLoad = ["Maria", "star", "projectile-fireball", "staff.svg"];
+var spritesToLoad = ["Maria", "star", "projectile-fireball", "staff.svg", "star-bar", "silver-star"];
 for(let i = 0; i < spritesToLoad.length; i++) {
     var spriteName = spritesToLoad[i];
     if(spriteName.includes(".")) {
@@ -50,7 +50,36 @@ var bottomY = innerHeight/2 - 50;
 var hazardSpeed = 200; //pixels per sec
 var hazards = [];
 var stars = [];
+function makeStarBar() {
+
+    var maxWidth = 235;
+    var starBarCon = new Container();
+    var starBarFrame = new Sprite(resources["sprites/star-bar.png"].texture);
+    var starBar = new PIXI.Graphics();
+    starBar.beginFill(0xFFFF00);
+    starBar.drawRect(0,0,maxWidth,45);
+    starBar.width = 0;
+    starBarCon.x = 10;
+    starBarCon.y = 10;
+    starBar.x = 30;
+    starBar.y = 1;
+    starBarCon.addChild(starBar);
+    starBarCon.addChild(starBarFrame);
+    function updateStarBar(ratio) {
+        starBar.width = ratio * maxWidth
+    }
+    app.stage.addChild(starBarCon);
+    return {
+        starBar,
+        starBarCon,
+        destroy: function() {app.stage.removeChild(starBarCon)},
+        update: updateStarBar,
+    }
+}
 function loadRhythmGame(midi, beatTime) {
+    var maxStars = midi.melody.length * 2;
+    var starsCollected = 0;
+    var starBar = makeStarBar();
     hazardSpeed = 200 * 500/beatTime;
     state = playRhythm;
     maria = createAnimatedSprite("Maria");
@@ -65,15 +94,27 @@ function loadRhythmGame(midi, beatTime) {
     maria.goto(maria.sprite.width/2, bottomY);
     maria.setAnim(1,4);
     maria.animation.speed = 7;
-    event.on("jump", function(note) {
+    function jump(data) {
+        if(data.score === "great") {
+            starsCollected += 2;
+        } else if(data.score === "good") {
+            starsCollected += 1;
+        }
+        starBar.update(starsCollected/maxStars);
         if(maria.sprite.y === bottomY || true) {
             maria.vy = -30;
             maria.sprite.y--;
         } else {
             
         }
-    });
-    event.once("gameEnd", function() {
+    }
+    function missed() {
+        starsCollected = Math.max(starsCollected-1, 0);
+        starBar.update(starsCollected/maxStars);
+    }
+    event.on("jump", jump);
+    event.on("noteMissed", missed);
+    event.once("sceneEnd", function() {
         state = wait;
         maria.destroy();
         app.stage.removeChild(ghostStar);
@@ -81,14 +122,47 @@ function loadRhythmGame(midi, beatTime) {
             app.stage.removeChild(haz);
         });
         hazards = [];
+        starBar.destroy();
+        event.off("noteMissed", missed);
+        event.off("jump", jump);
+        event.emit("gameEnd", {type: "Rhythm", level: Math.floor((starsCollected/maxStars)/0.25)});
     });
 }
+
+var maxStars;
+var starsLeft;
+var starBar;
 function loadStaffGame() {
+
+    maxStars = midiWhole.length * 4;
+    starsLeft = maxStars;
+    starBar = makeStarBar();
+    starBar.update(1);
     state = playStaff;
     hazardSpeed = innerWidth/3;
     lastCheckedIndex = 0;
+
+    function makeStar(note) {
+        if(starsLeft === 0) {
+            return;
+        }
+        --starsLeft;
+        starBar.update(starsLeft/maxStars);
+        var num = note.num;
+        var star = new Sprite(resources["sprites/star.png"].texture);
+        star.anchor.set(0.5,0.5);
+        star.x = -50;
+        star.y = getNoteYPosition(num);
+        star.x = 300;
+        star.scale.set(1.5);
+        // star.tint = 0xAA5555;
+        // star.y = 300;
+        star.note = num;
+        app.stage.addChild(star);
+        stars.push(star);
+    }
     event.on("noteDown", makeStar);
-    event.once("gameEnd", function() {
+    event.once("sceneEnd", function() {
         event.off("noteDown", makeStar);
         state = wait;
         stars.forEach(function(star) {
@@ -99,53 +173,75 @@ function loadStaffGame() {
             app.stage.removeChild(haz);
         });
         hazards = [];
+        starBar.destroy();
+        event.emit("gameEnd", {type: "Staff", level: Math.floor((starsLeft/maxStars)/0.33 + 1)});
     })
 }
 function loadStarFX() {
+    var starBar = makeStarBar();
+    var maxStars = midiWhole.length * 2;
+    var curStars = 0;
     stars = [];
     state = playStars;
-    event.on("stars", function(data) {
-        makeStarFX(data);
-    });
-}
-function makeStarFX(data) {
-    if(data.score === "great") {
-        for(var i = 0; i < 2; i++) {
-            var star = new Sprite(resources["sprites/star.png"].texture);
+    function makeStarFX(data) {
+        if(data.score === "great") {
+            for(var i = 0; i < 2; i++) {
+                var star = new Sprite(resources["sprites/star.png"].texture);
+                star.x = 50;
+                star.y = 50;
+                app.stage.addChild(star);
+                star.vx = Math.random() * 50 - 25;
+                star.vy = Math.random() * 5 - 10;
+                stars.push(star);
+            }
+            curStars += 2;
+        } else if(data.score === "good") {
+            var star = new Sprite(resources["sprites/silver-star.png"].texture);
             star.x = 50;
             star.y = 50;
             app.stage.addChild(star);
             star.vx = Math.random() * 50 - 25;
             star.vy = Math.random() * 5 - 10;
             stars.push(star);
+            curStars += 1;
         }
+        starBar.update(curStars/maxStars);
     }
+    function noteMissed() {
+        curStars -= 1;
+        curStars = Math.max(curStars, 0);
+        starBar.update(curStars/maxStars);
+    }
+    event.on("noteMissed", noteMissed);
+    event.on("stars", makeStarFX);
+    event.once("sceneEnd", function() {
+        starBar.destroy();
+        event.off("stars", makeStarFX);
+        event.off("noteMissed", noteMissed);
+        event.emit("gameEnd", {type: "Master", level: Math.floor((curStars/maxStars)/0.25)});
+    });
 }
-function makeStar(note) {
-    var num = note.num;
-    var star = new Sprite(resources["sprites/star.png"].texture);
-    star.anchor.set(0.5,0.5);
-    star.x = -50;
-    star.y = getNoteYPosition(num);
-    star.x = 300;
-    star.scale.set(1.5);
-    // star.tint = 0xAA5555;
-    // star.y = 300;
-    star.note = num;
-    app.stage.addChild(star);
-    stars.push(star);
-}
+
 var lastCheckedIndex = 0;
 function playStaff(dT) {
     var dTime = dT * 1/60;
     var curTime = Date.now() - startTime;
     var curBeat = curTime / beatTime;
     checkForNewHazards(curBeat);
-    hazards.forEach(function(hazard) {
-        if(hazard.moving === false) return;
+    for(let i = 0; i < hazards.length; i++) {
+        var hazard = hazards[i];
+        if(hazard.moving === false) continue;
         console.log(hazard.note);
         hazard.x -= dTime * hazardSpeed;
-    });
+        if(hazard.x < 0 - hazard.width) {
+            hazards.splice(i,1);
+            --i;
+            app.stage.removeChild(hazard);
+            starsLeft -= 2;
+            starsLeft = Math.max(starsLeft, 0);
+            starBar.update(starsLeft/maxStars);
+        }
+    };
     stars.forEach(function(star,i) {
         if(star.moving === false) return;
         console.log(star.note);
