@@ -16,9 +16,11 @@ var app = new Application({
     resolution: 1
     }
 );
-app.renderer.backgroundColor = 0x55DD55;
+app.renderer.backgroundAlpha = 0;
 app.renderer.view.style.position = "absolute";
+app.renderer.view.style.pointerEvents = "none";
 app.renderer.view.style.top = "0px";
+app.renderer.view.style.zIndex = "102";
 app.renderer.view.style.left = "0px";
 /// Fill the screen 
 app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -62,7 +64,7 @@ function loadRhythmGame(midi, beatTime) {
     maria.goto(maria.sprite.width/2, bottomY);
     maria.setAnim(1,4);
     maria.animation.speed = 7;
-    event.on("noteHit", function(note) {
+    event.on("jump", function(note) {
         if(maria.sprite.y === bottomY || true) {
             maria.vy = -30;
             maria.sprite.y--;
@@ -74,16 +76,37 @@ function loadRhythmGame(midi, beatTime) {
 }
 function loadStaffGame() {
     state = playStaff;
+    hazardSpeed = innerWidth/3;
     lastCheckedIndex = 0;
-    event.on("noteHit", function(note) {
-        makeStar(note.data[0]);
+    event.on("noteDown", function(note) {
+        makeStar(note.num);
     });
+}
+function loadStarFX() {
+    stars = [];
+    state = playStars;
+    event.on("stars", function(score) {
+        makeStarFX(score);
+    });
+}
+function makeStarFX(score) {
+    var star = new Sprite(resources["sprites/star.png"].texture);
+    if(score === "great" || true) {
+        star.vx = Math.random() * 20 - 10;
+        star.vy = Math.random() * -3 - 5;
+        stars.push(star);
+    }
 }
 function makeStar(num) {
     var star = new Sprite(resources["sprites/star.png"].texture);
     star.anchor.set(0.5,0.5);
     star.x = -50;
     star.y = getNoteYPosition(num);
+    star.x = 300;
+    star.scale.set(1.5);
+    // star.tint = 0xAA5555;
+    // star.y = 300;
+    star.note = num;
     app.stage.addChild(star);
     stars.push(star);
 }
@@ -95,10 +118,42 @@ function playStaff(dT) {
     checkForNewHazards(curBeat);
     hazards.forEach(function(hazard) {
         if(hazard.moving === false) return;
+        console.log(hazard.note);
         hazard.x -= dTime * hazardSpeed;
+    });
+    stars.forEach(function(star,i) {
+        if(star.moving === false) return;
+        console.log(star.note);
+        star.x += dTime * hazardSpeed * 2;
+        star.rotation += 0.2;
+        var col = checkHazardCol(star);
+        if(col) {
+            animGreat(star);
+            star.moving = false;
+            animBad(col);
+            col.moving = false;
+        }
+        if(star.x > innerWidth + star.width) {
+            stars.splice(i,1);
+            app.stage.removeChild(star);
+        }
     });
     renderAnims();
 }
+
+function playStars(dT) {
+    var dTime = dT * 1/60;
+    var curTime = Date.now() - startTime;
+    var curBeat = curTime / beatTime;
+    stars.forEach(function(star,i) {
+        star.x += star.vx;
+        star.vx *= 0.9;
+        star.y += star.vy;
+        star.vy += 0.7;
+    });
+    renderAnims();
+}
+            
 function checkForNewHazards(curBeat) {
     for(var i = lastCheckedIndex; i < midi.length; i++) {
         var note = midi[i];
@@ -152,15 +207,16 @@ function getNoteYPosition(noteNum) {
 
     var yPosition = referenceYPosition + (referenceStepValue - targetStepValue) * staffProps.gap * 0.5;
 
-    return yPosition;
+    return yPosition * staffProps.scale;
 }
 
 
 function spawnStaffHazard(note) {
     var hazard = createAnimatedSprite("projectile-fireball", 144);
-    app.stage.addChild(hazard.sprite)
+    app.stage.addChild(hazard.sprite);
+    hazard.sprite.note = note.data[0];
     hazard.sprite.rotation = Math.PI/2;
-    hazard.goto(innerWidth + hazard.sprite.width, getNoteYPosition(note.data[0]) * staffProps.scale);
+    hazard.goto(innerWidth + hazard.sprite.width, getNoteYPosition(note.data[0]));
     hazard.setAnim(0,7);
     hazard.animation.speed = 7;
     hazards.push(hazard.sprite);
@@ -188,6 +244,7 @@ function spawnHazards(track, beatTime) {
     }
 }
 function animGreat(hazard) {
+    hazard.tint = 0xffffff;
     function anim() {
         if(hazard.alpha <= 0) {
             app.stage.removeChild(hazard);
@@ -231,10 +288,39 @@ function animBad(hazard) {
     }
     event.on("tick", anim);
 }
-addEventListener("keypress", function() {
-    event.emit("noteHit");
-    judgeNote();
+addEventListener("keypress", function(e) {
+    event.emit("noteDown", {data: [getNoteNumber(e.code)]});
 });
+function getNoteNumber(keystrokeCode) {
+    /// Testing feature
+    // Mapping of keystroke codes to MIDI note numbers
+    // Home row = white keys starting from middle C (60)
+    // Top row = black keys (sharps/flats)
+    var keyToNote = {
+        // White keys (home row) - starting from middle C
+        'KeyA': 60,  // C4 (Middle C)
+        'KeyS': 62,  // D4
+        'KeyD': 64,  // E4
+        'KeyF': 65,  // F4
+        'KeyG': 67,  // G4
+        'KeyH': 69,  // A4
+        'KeyJ': 71,  // B4
+        'KeyK': 72,  // C5
+        'KeyL': 74,  // D5
+        
+        // Black keys (top row)
+        'KeyW': 61,  // C#4/Db4
+        'KeyE': 63,  // D#4/Eb4
+        'KeyT': 66,  // F#4/Gb4
+        'KeyY': 68,  // G#4/Ab4
+        'KeyU': 70,  // A#4/Bb4
+        'KeyO': 73,  // C#5/Db5
+        'KeyP': 75   // D#5/Eb5
+    };
+    
+    // Return the note number or undefined if key not mapped
+    return keyToNote[keystrokeCode];
+}
 function gameLoop(delta) {
     state(delta);
     event.emit("tick");
@@ -258,9 +344,18 @@ function playRhythm(dT){
         if(hazard.moving === false) return;
         hazard.x -= dTime * hazardSpeed;
     });
-    stars.forEach(function(star) {
-        star.x += dTime * 400;
-    });
+}
+function checkHazardCol(star) {
+    var len = hazards.length;
+    for(var i = 0; i < len; i++) {
+        var hazard = hazards[i];
+        if(hazard.moving === false) continue;
+        
+        if(Math.abs(star.x - hazard.x) < hazard.width/2 && hazard.note === star.note) {
+            return hazard;
+        }
+    }
+    return false;
 }
 function renderAnims() {
     animations.forEach(function(animation){
