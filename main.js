@@ -323,23 +323,45 @@ function loadSfx() {
 }
 var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Mary Had a Little Lamb"];
 function loadPage() {
-    var panel = cde("div.panel", [
-        cde("h1", {t: "Play Song"}),
-        cde("button.panel-button blue-button", [
-            "Rhythm",
-            cde("div.starHolder", [
-                cde("img", {src: "sprites/star.png"}),
-                cde("img.empty", {src: "sprites/star.png"}),
-                cde("img.empty", {src: "sprites/star.png"}),
-            ])
-        ]),
-        cde("button.panel-button green-button", {t: "Staff"}),
-        cde("button.panel-button rehd-button", {t: "Master"}),
-    ]);
-    page.appendChild(panel);
     loadMenu();
 }
+var games = {
+    "Rhythm": startRhythmGame,
+    "Staff": startStaffGame,
+    "Master": startSongPlay
+}
+
 function loadMenu() {
+    function loadPanel(song) {
+        var panel = cde("div.panel", [
+            cde("h1", {t: song}),
+        ]);
+        var modes = ["Rhythm", "Staff", "Master"];
+        var colors = ["green", "red", "blue"]
+        for(var i = 0; i < modes.length; i++) {
+            var starHolder = cde("div.starHolder");
+            var button = cde("button.panel-button " + colors[i] + "-button", [
+                modes[i],
+                starHolder
+            ]);
+            var prof = Number(localStorage.getItem(song + "-" + modes[i]));
+            for(var j = 0; j < 3; j++) {
+                starHolder.appendChild(cde("img" + (prof > j ? "" : ".empty"), {src: "sprites/star.png"}));
+            }
+            panel.appendChild(button);
+            let mode = modes[i];
+            button.addEventListener("click", function() {
+                panel.classList.add("hide");
+                songContainer.classList.add("hide");
+                setTimeout(function(){
+                    panel.remove();
+                    songContainer.remove();
+                    playSong(song, mode);
+                }, 1000);
+            });
+        }
+        page.appendChild(panel);
+    }
     gameMode = "menu";
     freePlay = true;
     var songContainer = cde("div.songContainer");
@@ -347,11 +369,7 @@ function loadMenu() {
     var currentIndex = 0;
     page.appendChild(songContainer);
     scores.forEach(function(song, i) {
-        var item = cde("div.song-item", 
-            {onclick: function() {
-                songContainer.remove();
-                playSong(song);
-            }},
+        var item = cde("div.song-item",
             [
                 cde("h2", {t: song}),
             ]
@@ -365,12 +383,14 @@ function loadMenu() {
     });
     centerItem(currentIndex);
     addEventListener("keydown", function(e) {
+        if(gameMode !== "menu") return;
+        
         if(e.key === "ArrowRight") {
             selectRight();
         } else if(e.key === "ArrowLeft") {
             selectLeft();
         } else if(e.key === " ") {
-            selectCurrentItem();
+            selectCurrentItem(scores[currentIndex]);
         }
     })
     
@@ -442,8 +462,9 @@ function loadMenu() {
             behavior: "smooth"
         });
     }
-    function selectCurrentItem() {
+    function selectCurrentItem(song) {
         songContainer.classList.toggle("select-mode");
+        loadPanel(song);
     }
 }
 function getJson(url, cb, method, data)
@@ -487,7 +508,7 @@ function getJson(url, cb, method, data)
     
     cb = cb || function () {};
 };
-function playSong(song) {
+function playSong(song, mode) {
     var loading = 0;
     var maxLoad = 2;
     
@@ -500,9 +521,7 @@ function playSong(song) {
             midiWhole.sort(function(a,b) {
                 return a.trueBeat - b.trueBeat;
             })
-            // startRhythmGame(song);
-            startStaffGame();
-            // startSongPlay(song);
+            games[mode](song);
         }
     });
 }

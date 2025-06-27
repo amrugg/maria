@@ -8,6 +8,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     overflow-x: hidden; /* Prevent body scrolling */
+    overflow-y: hidden; /* Prevent body scrolling */
     background-color: #f5f5f5;
 }
 
@@ -23,6 +24,9 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
+    opacity: 1;
+    
+    transition: all 0.3s ease;
     transform: translate(-50%, -50%);
     height: 500px;
     width: 100%; /* Add this */
@@ -33,18 +37,27 @@ body {
     display: none; 
 }
 
+.songContainer.hide {
+    transform: translate(-50%, 15%);
+    opacity: 0;
+}
 .panel {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, 0);
     height: 250px;
     background: #fff;
     border-radius: 12px;
+    opacity: 1;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    width: 25vw;
+    min-width: max(25vw, 300px);
     padding: -5px;
     text-align: center;
+}
+.panel.hide {
+    transform: translate(-50%, -200px);
+    opacity: 0;
 }
 img.empty {
     filter: saturate(0);
@@ -98,12 +111,12 @@ img.empty {
     background: #388e3c;
 }
 
-.rehd-button {
+.red-button {
     background: #ea3e3e;
     color: white;
 }
 
-.rehd-button:hover {
+.red-button:hover {
     background: #c31919;
 }
 
