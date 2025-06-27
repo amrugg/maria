@@ -34,9 +34,10 @@
             MidiParser.parse( source, function(obj){
                 beatsPerMeasure = prompt("How many beats per measure? (e.g. 4 for 4/4, 3 for 3/4)") || 4;
                 var button = document.getElementById("copy");
-                var combinedTrack = [];
                 var track = obj.track;
-                track.forEach(function(t){
+                var melody = [];
+                var harmony = [];
+                track.forEach(function(t, trackIndex){
                     var trueTime = 0;
                     var notes = t.event;
                     var noteOnListen = {};
@@ -83,15 +84,16 @@
                             noteOnListen[note.data[0]] = note;
                         }
                     }
-                    combinedTrack = combinedTrack.concat(notes);
-                });
-                combinedTrack.sort(function(a,b){
-                    return a.trueBeat - b.trueBeat;
+                    if(trackIndex === 0) {
+                        melody = notes;
+                    } else {
+                        harmony = notes;
+                    }
                 });
                 button.hidden = false;
                 button.textContent = "Click to copy";
                 button.onclick = function(){
-                    navigator.clipboard.writeText(JSON.stringify(combinedTrack));
+                    navigator.clipboard.writeText(JSON.stringify({melody, harmony}));
                 }
             });
             function createRestNotes(totalDuration, startTime, maxBeats, curBeat) {

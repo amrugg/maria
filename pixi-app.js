@@ -60,7 +60,7 @@ function loadRhythmGame(midi, beatTime) {
     ghostStar.anchor.set(0.5);
     ghostStar.y = bottomY -maria.sprite.height/2-32;
     ghostStar.x = maria.sprite.width/2;
-    spawnHazards(midi, beatTime);
+    spawnHazards(midi.melody, beatTime);
     maria.goto(maria.sprite.width/2, bottomY);
     maria.setAnim(1,4);
     maria.animation.speed = 7;
@@ -72,32 +72,56 @@ function loadRhythmGame(midi, beatTime) {
             
         }
     });
-
+    event.once("gameEnd", function() {
+        state = wait;
+        maria.destroy();
+        app.stage.removeChild(ghostStar);
+        hazards.forEach(function(haz) {
+            app.stage.removeChild(haz);
+        });
+        hazards = [];
+    });
 }
 function loadStaffGame() {
     state = playStaff;
     hazardSpeed = innerWidth/3;
     lastCheckedIndex = 0;
-    event.on("noteDown", function(note) {
-        makeStar(note.num);
-    });
+    event.on("noteDown", makeStar);
+    event.once("gameEnd", function() {
+        event.off("noteDown", makeStar);
+        state = wait;
+        stars.forEach(function(star) {
+            app.stage.removeChild(star);
+        });
+        stars = [];
+        hazards.forEach(function(haz) {
+            app.stage.removeChild(haz);
+        });
+        hazards = [];
+    })
 }
 function loadStarFX() {
     stars = [];
     state = playStars;
-    event.on("stars", function(score) {
-        makeStarFX(score);
+    event.on("stars", function(data) {
+        makeStarFX(data);
     });
 }
-function makeStarFX(score) {
-    var star = new Sprite(resources["sprites/star.png"].texture);
-    if(score === "great" || true) {
-        star.vx = Math.random() * 20 - 10;
-        star.vy = Math.random() * -3 - 5;
-        stars.push(star);
+function makeStarFX(data) {
+    if(data.score === "great") {
+        for(var i = 0; i < 2; i++) {
+            var star = new Sprite(resources["sprites/star.png"].texture);
+            star.x = 50;
+            star.y = 50;
+            app.stage.addChild(star);
+            star.vx = Math.random() * 50 - 25;
+            star.vy = Math.random() * 5 - 10;
+            stars.push(star);
+        }
     }
 }
-function makeStar(num) {
+function makeStar(note) {
+    var num = note.num;
     var star = new Sprite(resources["sprites/star.png"].texture);
     star.anchor.set(0.5,0.5);
     star.x = -50;
@@ -124,7 +148,7 @@ function playStaff(dT) {
     stars.forEach(function(star,i) {
         if(star.moving === false) return;
         console.log(star.note);
-        star.x += dTime * hazardSpeed * 2;
+        star.x += dTime * hazardSpeed * 3;
         star.rotation += 0.2;
         var col = checkHazardCol(star);
         if(col) {
@@ -155,8 +179,8 @@ function playStars(dT) {
 }
             
 function checkForNewHazards(curBeat) {
-    for(var i = lastCheckedIndex; i < midi.length; i++) {
-        var note = midi[i];
+    for(var i = lastCheckedIndex; i < midiWhole.length; i++) {
+        var note = midiWhole[i];
         if(note.trueBeat < curBeat) {
             ++lastCheckedIndex;
             spawnStaffHazard(note);
@@ -358,15 +382,21 @@ function checkHazardCol(star) {
     return false;
 }
 function renderAnims() {
-    animations.forEach(function(animation){
+    for(var i = 0; i < animations.length; i++) {
+        var animation = animations[i];
         if(animation.paused) {
-            return;
+            continue;
+        }
+        if(animation.destroy) {
+            animations.splice(i,1);
+            --i;
+            continue;
         }
         if(animation.frameCount%animation.speed === 0) {
             if(animation.x >= animation.length) {
                 if(animation.destructive) {
                     animation.destructive();
-                    return;
+                    continue;
                 } else {
                     animation.x = 0;
                 }
@@ -379,7 +409,7 @@ function renderAnims() {
             ++animation.x;
         }
         ++animation.frameCount;
-    });
+    };
 }
 function createAnimatedSprite(name, size = 96) {
     var tex = TextureCache["sprites/" + name + ".png"];
@@ -402,6 +432,10 @@ function createAnimatedSprite(name, size = 96) {
         goto: function(x, y) {
             sprite.x = x;
             sprite.y = y;
+        },
+        destroy: function() {
+            app.stage.removeChild(sprite);
+            anim.destroy = true;
         }
     };
     animations.push(obj.animation);

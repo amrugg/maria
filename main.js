@@ -1,6 +1,7 @@
 var page = document.getElementById("page");
 var noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 var midi = [{"deltaTime":0,"type":9,"channel":0,"data":[64,96],"trueTime":0,"trueBeat":0,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":480,"trueBeat":1,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":960,"trueBeat":2,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":1440,"trueBeat":3,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":1920,"trueBeat":4,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":2400,"trueBeat":5,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":2880,"trueBeat":6,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":3360,"trueBeat":7,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":3840,"trueBeat":8,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":4320,"trueBeat":9,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":4800,"trueBeat":10,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":5280,"trueBeat":11,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":5760,"trueBeat":12,"beat":1.5},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":6480,"trueBeat":13.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":6720,"trueBeat":14,"beat":2},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":7680,"trueBeat":16,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":8160,"trueBeat":17,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":8640,"trueBeat":18,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":9120,"trueBeat":19,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":9600,"trueBeat":20,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":10080,"trueBeat":21,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":10560,"trueBeat":22,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":11040,"trueBeat":23,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":11520,"trueBeat":24,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":12000,"trueBeat":25,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":12480,"trueBeat":26,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":12960,"trueBeat":27,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":13440,"trueBeat":28,"beat":1.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":14160,"trueBeat":29.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":14400,"trueBeat":30,"beat":2},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":15360,"trueBeat":32,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":15840,"trueBeat":33,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":16320,"trueBeat":34,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":16800,"trueBeat":35,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":17280,"trueBeat":36,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":17760,"trueBeat":37,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":18000,"trueBeat":37.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":18240,"trueBeat":38,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":18720,"trueBeat":39,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":19200,"trueBeat":40,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":19680,"trueBeat":41,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":19920,"trueBeat":41.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":20160,"trueBeat":42,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":20640,"trueBeat":43,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":21120,"trueBeat":44,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":21600,"trueBeat":45,"beat":1},{"deltaTime":22080,"type":9,"channel":0,"data":[55,96],"trueTime":22080,"trueBeat":46,"beat":2},{"deltaTime":961,"type":9,"channel":0,"data":[64,96],"trueTime":23040,"trueBeat":48,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":23520,"trueBeat":49,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":24000,"trueBeat":50,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":24480,"trueBeat":51,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[67,96],"trueTime":24960,"trueBeat":52,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[65,96],"trueTime":25440,"trueBeat":53,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":25920,"trueBeat":54,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":26400,"trueBeat":55,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":26880,"trueBeat":56,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":27360,"trueBeat":57,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":27840,"trueBeat":58,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[64,96],"trueTime":28320,"trueBeat":59,"beat":1},{"deltaTime":1,"type":9,"channel":0,"data":[62,96],"trueTime":28800,"trueBeat":60,"beat":1.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":29520,"trueBeat":61.5,"beat":0.5},{"deltaTime":1,"type":9,"channel":0,"data":[60,96],"trueTime":29760,"trueBeat":62,"beat":2}];
+var midiWhole = [];
 var event = makeEvents();
 var sfx = {};
 loadSfx();
@@ -8,6 +9,8 @@ var activeNotes = {};
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioCtx = new AudioContext();
 var pianoPlayer = null;
+var gameMode = "menu";
+var freePlay = true;
 Soundfont.instrument(audioCtx, "acoustic_grand_piano")
 .then(function(player){
     pianoPlayer = player;
@@ -42,45 +45,38 @@ function onMIDIMessage(e) {
     if (command === 9 && velocity > 0) {
         var noteInfo = getNoteInfo(noteNumber);
         var message = "Key pressed: " + noteInfo + " (MIDI note " + noteNumber + "), velocity: " + velocity;
-        console.log(message);
+        // console.log(message);
         event.emit("noteDown", {num: noteNumber, vel: velocity});
-        // playPianoNote(noteNumber, velocity);
+        if(freePlay) {
+            playPianoNote(noteNumber, velocity);
+        }
     }
     // Note off (or note on with velocity 0)
     else if (command === 8 || (command === 9 && velocity === 0)) {
         var noteInfo = getNoteInfo(noteNumber);
         var message = "Key released: " + noteInfo + " (MIDI note " + noteNumber + ")";
-        console.log(message);
+        // console.log(message);
         event.emit("noteUp", {num: noteNumber});
-        releasePianoNote(noteNumber);
+        if(freePlay) {
+            releasePianoNote(noteNumber);
+        }
     }
 }
-
-var i = -1;
-function playMidi() {
-    ++i;
-    var note = midi[i];
-    if(note.data[1] === 0) {
-        releasePianoNote(note.data[1]);
-    } else {
-        playPianoNote(note.data[0], note.data[1]);
-    }
-    setTimeout(playMidi, note.deltaTime);
-}
-function playPianoNote(midiNumber, velocity) {
+var pianoVol = 5;
+function playPianoNote(midiNumber, velocity, secs = 10) {
     if (!pianoPlayer) {
         console.warn("Piano not yet loaded.");
         return;
     }
     var noteName = getNoteInfo(midiNumber);
     // velocity [0–127] → gain [0–1]
-    var gain = (velocity / 127) * 0.8 + 0.2; 
+    var gain = (velocity / 127) * pianoVol + 0.2; 
     // play for 1 second by default
     var src = pianoPlayer.play(noteName, audioCtx.currentTime, {
         gain: gain,
-        duration: 10  // plenty of time; we"ll cut it off
+        duration: secs  // plenty of time; we"ll cut it off
     });
-    console.log("Playing", noteName, "vel", velocity);
+    // console.log("Playing", noteName, "vel", velocity);
     activeNotes[midiNumber] = src;
 }
 function releasePianoNote(midiNumber) {
@@ -129,8 +125,20 @@ function onMIDIFailure(error) {
     console.log("MIDI Error: " + error);
 }
 
+function rhythmAnim(data) {
+    if(data.score === "great") {
+        animGreat(data.note.hazard);
+    } else if(data.score === "good") {
+        animGood(data.note.hazard);
+    } else {
+        animBad(data.note.hazard);
+    }
+}
 function startRhythmGame(song) {
-    makeSong(song);
+    gameMode = "rhythm";
+    freePlay = false;
+    makeSong(song, 20, false).style.bottom = "20px";
+    event.on("noteHit", rhythmAnim);
     loadRhythmGame(midi, beatTime);
     startTime = Date.now() + beatTime * downBeats;
     beginListening({matchNote: false, cb: function() {
@@ -145,14 +153,37 @@ function startRhythmGame(song) {
         }
         beat = (beat+1)%timeSig;
     }, beatTime);
+    scheduleEnd(endRhythmGame);
+
+    event.on("gameEnd", function() {
+        event.off("noteHit", rhythmAnim);
+        clearInterval(int);
+
+    });
 };
+function scheduleEnd(end) {
+    setTimeout(end, (midiWhole.at(-1).trueBeat + midiWhole.at(-1).beat + 8) * beatTime);
+}
+function endRhythmGame() {
+    if(Date.now() - startTime < midiWhole.at(-1).trueBeat * beatTime) {
+        return scheduleEnd(endRhythmGame);
+    }
+    event.emit("gameEnd");
+    loadMenu();
+}
+function endStaffGame() {
+    if(Date.now() - startTime < midiWhole.at(-1).trueBeat * beatTime) {
+        return scheduleEnd(endStaffGame);
+    }
+    event.emit("gameEnd");
+    loadMenu();
+}
 function startSongPlay(song) {
-    makeSong(song, 50);
+    makeSong(song, 50, true);
     loadStarFX();
-    // loadRhythmGame(midi, beatTime);
     startTime = Date.now() + beatTime * downBeats;
-    beginListening({matchNote: true, cb: function(score) {
-        event.emit("stars", score)
+    beginListening({matchNote: true, cb: function(score, note) {
+        event.emit("stars", {score: score, note: note});
     }});
 
     var int = setInterval(function() {
@@ -172,54 +203,72 @@ var staffProps = {
 }
 
 function startStaffGame() {
-
+    freePlay = true;
     startTime = Date.now() + beatTime * downBeats;
     var staff = cde("img.staff", {src: "sprites/staff.svg", style: {height: "90%", zIndex: 0}});
     page.appendChild(staff);
     staffProps.scale = staff.clientHeight/staff.naturalHeight;
-    loadStaffGame(midi, staffProps, beatTime);
+    loadStaffGame(midiWhole, staffProps, beatTime);
+    scheduleEnd(endStaffGame);
+    event.once("gameEnd", function() {
+        staff.remove();
+    })
 }
 
 var startTime = 0;
 var beatTime = 500;
 var downBeats = 5;
 
-function beginListening(options) {
-    event.on("noteDown", function(e) {
-        console.log(e)
-        judgeNote(e, options);
-    });
+function listen(e) {
+    judgeNote(e, listen.options);
 }
-function makeSong(song, scale = 20) {
+function beginListening(options) {
+    listen.options = options;
+    event.on("noteDown", listen);
+}
+function endListening() {
+    event.off("noteDown", listen);
+}
+function makeSong(song, scale = 20, addVbl) {
     var vblOffset = 100;
     var staff = {
         offset: 67.5,
         dist: 32.76,
         scale: 1,
     };
-    var staffEl = cde("img", {src: "/sheets/" + song + ".svg"});
+    var staffEl = cde("img.staff", {src: "/sheets/" + song + ".svg"});
     page.appendChild(staffEl);
     if(scale) {
         staffEl.style.height = scale + "%";
     }
-    event.on("tick", function(){
-        if(staff.scale === 1) {
+    event.on("tick", function() {
+        if(staff.scale === 1 || staff.scale === Infinity) {
             staff.scale = staffEl.offsetHeight/staffEl.naturalHeight;
         }
         var curTime = Date.now() - startTime;
         var x = (-(curTime /beatTime) * staff.dist - staff.offset) * staff.scale + vblOffset;
         staffEl.style.transform = "translateX("+x+"px)";
     });
-    var vbl = cde("div.vbl", {style: {left: vblOffset + "px"}});
-    page.appendChild(vbl);
+    if(addVbl) {
+        /// vbl stands for vertical blue line
+        var vbl = cde("div.vbl", {style: {left: vblOffset + "px"}});
+        page.appendChild(vbl);
+    }
+    event.once("gameEnd", function() {
+        if(vbl) {
+            vbl.remove();
+        }
+        staffEl.remove();
+    });
+    return staffEl;
 }
 function judgeNote(e, options) {
     var curTime = Date.now() - startTime;
     var curBeat = curTime / beatTime;
     if(options.matchNote) {
-        var note = findClosestNote(e.num, curBeat);
+        var note = findClosestNote(e.num, curBeat, midiWhole);
     } else {
-        var note = findClosestNote(false, curBeat);
+        var note = findClosestNote(false, curBeat, midi.melody);
     }
     if(note) {
         note.played = true;
@@ -228,23 +277,22 @@ function judgeNote(e, options) {
         page.appendChild(dispEl);
         var score = "bad";
         if(diff < 0.1) {
-            animGreat(note.hazard);
             score = "great";
         } else if(diff < 0.2) {
-            animGood(note.hazard);
             score = "good";
-        } else {
-            animBad(note.hazard);
         }
         if(options.cb) {
-            options.cb(score);
+            options.cb(score, note);
         }
-        playPianoNote(note.data[0], note.data[1]);
+        console.log("Played Note", ...note.data, note.beat * beatTime / 1000);
+        if(gameMode !== "play") {
+            playPianoNote(note.data[0], note.data[1], note.beat * beatTime / 1000);
+        }
 
-        event.emit("noteHit", note);
+        event.emit("noteHit", {note, score});
     }
 }
-function findClosestNote(noteId, targetBeat) {
+function findClosestNote(noteId, targetBeat, midi) {
     var closest = null;
     var smallestDiff = Infinity;
     
@@ -273,18 +321,130 @@ function loadSfx() {
         volume: 0.5,
     });
 }
-var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John"];
+var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Mary Had a Little Lamb"];
 function loadPage() {
+    var panel = cde("div.panel", [
+        cde("h1", {t: "Play Song"}),
+        cde("button.panel-button blue-button", [
+            "Rhythm",
+            cde("div.starHolder", [
+                cde("img", {src: "sprites/star.png"}),
+                cde("img.empty", {src: "sprites/star.png"}),
+                cde("img.empty", {src: "sprites/star.png"}),
+            ])
+        ]),
+        cde("button.panel-button green-button", {t: "Staff"}),
+        cde("button.panel-button rehd-button", {t: "Master"}),
+    ]);
+    page.appendChild(panel);
+    loadMenu();
+}
+function loadMenu() {
+    gameMode = "menu";
+    freePlay = true;
     var songContainer = cde("div.songContainer");
+    var items = [];
+    var currentIndex = 0;
     page.appendChild(songContainer);
-    scores.forEach(function(song) {
-        songContainer.appendChild(cde("button.song", 
-            {t: song, onclick: function() {
+    scores.forEach(function(song, i) {
+        var item = cde("div.song-item", 
+            {onclick: function() {
                 songContainer.remove();
                 playSong(song);
-            }}
-        ))
+            }},
+            [
+                cde("h2", {t: song}),
+            ]
+        );
+        items.push(item);
+        if(Math.floor(scores.length/2) === i) {
+            currentIndex = i;
+            item.classList.add("selected");
+        }
+        songContainer.appendChild(item);
     });
+    centerItem(currentIndex);
+    addEventListener("keydown", function(e) {
+        if(e.key === "ArrowRight") {
+            selectRight();
+        } else if(e.key === "ArrowLeft") {
+            selectLeft();
+        } else if(e.key === " ") {
+            selectCurrentItem();
+        }
+    })
+    
+
+    function selectLeft() {
+        if (currentIndex > 0) {
+            updateSelection(currentIndex - 1);
+
+            centerItem(currentIndex);
+        }
+    }
+
+    /**
+     * Moves selection to the right and centers that item
+     */
+    function selectRight() {
+        if (currentIndex < items.length - 1) {
+            updateSelection(currentIndex + 1);
+            centerItem(currentIndex);
+        }
+    }
+
+    /**
+     * Jumps to specific index and centers that item
+     * @param {number} index - The index to select
+     */
+    function jumpTo(index) {
+        if (index >= 0 && index < items.length) {
+            updateSelection(index);
+            centerItem(index);
+        }
+    }
+
+    /**
+     * Updates the selected class on items
+     * @param {number} newIndex - The index to be selected
+     */
+    function updateSelection(newIndex) {
+        // Remove previous selection
+        items[currentIndex].classList.remove("selected");
+        
+        // Update current index
+        currentIndex = newIndex;
+        
+        // Add new selection
+        items[currentIndex].classList.add("selected");
+    }
+    function centerItem(index) {
+        var item = items[index];
+
+        // Calculate center position
+        var containerWidth = songContainer.clientWidth;
+        var itemWidth = item.offsetWidth;
+        var gap = parseInt(window.getComputedStyle(songContainer).gap); // Get the gap from the container
+        var itemMargin = gap; // Use the gap as the margin between items
+
+        // Calculate the position where this item starts
+        var itemPosition = 0;
+        for (var i = 0; i < index; i++) {
+            itemPosition += items[i].offsetWidth + itemMargin;
+        }
+
+        // Calculate scroll position to center this item
+        var scrollPosition = itemPosition - (containerWidth / 2) + (itemWidth / 2);
+
+        // Perform the scroll
+        songContainer.scrollTo({
+            left: scrollPosition + 35,
+            behavior: "smooth"
+        });
+    }
+    function selectCurrentItem() {
+        songContainer.classList.toggle("select-mode");
+    }
 }
 function getJson(url, cb, method, data)
 {
@@ -336,6 +496,10 @@ function playSong(song) {
             console.error(err);
         } else {
             midi = json;
+            midiWhole = midi.melody.concat(midi.harmony);
+            midiWhole.sort(function(a,b) {
+                return a.trueBeat - b.trueBeat;
+            })
             // startRhythmGame(song);
             startStaffGame();
             // startSongPlay(song);
@@ -343,4 +507,3 @@ function playSong(song) {
     });
 }
 loadPage();
-/// 
