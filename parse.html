@@ -6,6 +6,7 @@
   </head>
   <body>
   <input type="file" id="filereader"/>
+  <input type=checkbox id="one-track"> Check if this song contains only melody and some is played in the left hand
   <br><button id=copy hidden></button>
         <script type="module">
             import MidiParser from 'https://cdn.skypack.dev/midi-parser-js'
@@ -86,6 +87,8 @@
                     }
                     if(trackIndex === 0) {
                         melody = notes;
+                    } else if(document.getElementById("one-track").checked) {
+                        melody = melody.concat(notes);
                     } else {
                         harmony = notes;
                     }

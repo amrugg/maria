@@ -321,7 +321,7 @@ function loadSfx() {
         volume: 0.5,
     });
 }
-var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Mary Had a Little Lamb"];
+var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Mary Had a Little Lamb", "Old MacDonald Had a Farm"];
 function loadPage() {
     loadMenu();
 }
@@ -384,7 +384,7 @@ function loadMenu() {
     centerItem(currentIndex);
     addEventListener("keydown", function(e) {
         if(gameMode !== "menu") return;
-        
+
         if(e.key === "ArrowRight") {
             selectRight();
         } else if(e.key === "ArrowLeft") {
