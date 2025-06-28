@@ -666,7 +666,7 @@ function playSong(song, mode) {
     });
 }
 var baseDir;
-if(window.location.href.beginsWith("https://")) {
+if(window.location.href.includes("https://")) {
     baseDir = "/maria/"
 } else {
     baseDir = "/"
