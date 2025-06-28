@@ -16,10 +16,10 @@
             // provide the File source and a callback function
             var text;
 
-            var wholeBeatLength// = 480 * 4;
+            var wholeBeatLength = 480 * 4;
             function processBeat(curBeatLength) {
                 if (typeof wholeBeatLength !== 'number') {
-                    wholeBeatLength = 4* (curBeatLength+25) / (prompt("How many beats does the first note receive? (e.g. 4 for a whole note, 1.5 for a dotted quarter, 0.5 for an 8th note)") || 1);
+                    wholeBeatLength = 4* (curBeatLength+1) / (prompt("How many beats does the first note receive? (e.g. 4 for a whole note, 1.5 for a dotted quarter, 0.5 for an 8th note)") || 1);
                     beatListeners.forEach(function(func){func()});
                 }
 
@@ -28,7 +28,7 @@
                 ratio /= 1/16;
                 ratio = Math.round(ratio);
                 ratio *= 1/16;
-                return ratio * (1/0.9375);
+                return ratio//+0.0625// * (1/0.9375);
             }
             var beatsPerMeasure = 4;
             var beatListeners = [];
@@ -62,7 +62,6 @@
                     var noteOnListen = {};
                     var lastNoteEndTime = 0;
                     var curBeat = 0;
-                    debugger
                     for(var i = 0; i < notes.length; i++) {
                         var note = notes[i];
                         trueTime += note.deltaTime;
@@ -73,6 +72,7 @@
                             --i;
                             continue;
                         }
+                        debugger
                         
                         if(note.data[1] === 0 && noteOnListen[note.data[0]]) {
                             // Note off event - calculate note duration

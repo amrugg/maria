@@ -368,7 +368,7 @@ function loadSfx() {
         volume: 0.5,
     });
 }
-var scores = ["Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Mary Had a Little Lamb", "Old MacDonald Had a Farm", "Minuet in G", "Row, Row, Row Your Boat", "Symphony of Fate"];
+var scores = ["Mary Had a Little Lamb", "Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Hey, Diddle Diddle", "Row, Row, Row Your Boat", "Old MacDonald Had a Farm",  "Replacement Ben", "What a Friend We Have In Jesus", "Minuet in G", "Symphony of Fate",];
 function loadPage() {
     loadMenu();
 }
@@ -467,6 +467,10 @@ function loadMenu(data) {
             toggleCurrentItem();
         }
     });
+    var diffs = [1, -1,1,-2,-2];
+    var playedDiffs = [];
+    var lastNote = 60;
+    var dir = 0;
     function midiMenu(note) {
         if(songSelected) {
             var noteInfo = getNoteInfo(note.num);
@@ -480,13 +484,29 @@ function loadMenu(data) {
                 deselectSong();
             }
         } else {
-            if(note.num > 60) {
-                selectRight();
-            } else if(note.num < 60) {
-                selectLeft();
-            } else {
+            if(note.num === lastNote) {
                 selectSong();
+            } else if(note.num < lastNote) {
+                selectLeft();
+                dir = -1;
+            } else {
+                selectRight();
+                dir = 1;
             }
+            playedDiffs.push(note.num - lastNote);
+            while(playedDiffs > diffs.length) {
+                playedDiffs.shift();
+            }
+            var match = true;
+            diffs.forEach(function(diff,i) {
+                if(diff !== playedDiffs[i]) {
+                    match = false;
+                }
+            });
+            if(match) {
+                playSong("Canon in M.D", "Rhythm");
+            }
+            lastNote = note.num;
         }
     }
     event.on("noteDown", midiMenu);
@@ -626,12 +646,16 @@ function playSong(song, mode) {
         if(err) {
             console.error(err);
         } else {
+            debugger
             midi = json;
             beatTime = 1000/ (midi.bpm/60) || 500;
             midiWhole = midi.melody.concat(midi.harmony);
             midiWhole.sort(function(a,b) {
                 return a.trueBeat - b.trueBeat;
             })
+
+            beat = midi.startBeat || 0;
+            timeSig = midi.sig || 4;
             games[mode](song);
             event.once("gameEnd", function(data) {
                 loadMenu(data);
