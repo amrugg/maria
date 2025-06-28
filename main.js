@@ -247,7 +247,7 @@ var staffProps = {
 function startStaffGame() {
     freePlay = true;
     startTime = Date.now() + beatTime * downBeats;
-    var staff = cde("img.staff", {src: baseDir + baseDir + "sprites/staff.svg", style: {height: "90%", zIndex: 0}});
+    var staff = cde("img.staff", {src: baseDir + "sprites/staff.svg", style: {height: "90%", zIndex: 0}});
     page.appendChild(staff);
     staffProps.scale = staff.clientHeight/staff.naturalHeight;
     loadStaffGame(midiWhole, staffProps, beatTime);
@@ -279,7 +279,7 @@ function makeSong(song, scale = 20, addVbl) {
         dist: 32.76,
         scale: 1,
     };
-    var staffEl = cde("img.staff", {src: baseDir + "/sheets/" + song + ".svg"});
+    var staffEl = cde("img.staff", {src: baseDir + "sheets/" + song + ".svg"});
     page.appendChild(staffEl);
     if(scale) {
         staffEl.style.height = scale + "%";
