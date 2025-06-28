@@ -11,6 +11,7 @@ var audioCtx = new AudioContext();
 var pianoPlayer = null;
 var gameMode = "menu";
 var freePlay = true;
+var forceMute = false;
 Soundfont.instrument(audioCtx, "acoustic_grand_piano")
 .then(function(player){
     pianoPlayer = player;
@@ -65,6 +66,7 @@ function onMIDIMessage(e) {
 }
 var pianoVol = 5;
 function playPianoNote(midiNumber, velocity, secs = 10) {
+    if(forceMute) return;
     if (!pianoPlayer) {
         console.warn("Piano not yet loaded.");
         return;
@@ -81,6 +83,7 @@ function playPianoNote(midiNumber, velocity, secs = 10) {
     activeNotes[midiNumber] = src;
 }
 function releasePianoNote(midiNumber) {
+    if(forceMute) return;
     var src = activeNotes[midiNumber];
     if (src) {
         try {
@@ -420,12 +423,27 @@ function loadMenu(data) {
     function chooseSong(song, mode) {
         activePanel.classList.add("hide");
         songContainer.classList.add("hide");
+        muter.remove();
         setTimeout(function(){
             activePanel.remove();
             songContainer.remove();
             playSong(song, mode);
         }, 300);
         event.off("noteDown", midiMenu);
+    }
+    var muter = cde("div.muter", {t:"Mute internal piano", title: "Maria can play sound without help of external sources. This allows the Rhythm mode to be enhanced."});
+    page.appendChild(muter);
+    if(forceMute) {
+        muter.textContent = "Unmute internal piano";
+    }
+    muter.onclick = function() {
+        if(forceMute) {
+            forceMute = false;
+            muter.textContent = "Mute internal piano";
+        } else {
+            forceMute = true;
+            muter.textContent = "Unmute internal piano";
+        }
     }
     var songSelected = false;
     var activePanel = cde("div.panel hide");

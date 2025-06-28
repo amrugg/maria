@@ -12,7 +12,14 @@ body {
     background-color: #f5f5f5;
 }
 
-
+.muter {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.muter:hover {
+    text-decoration: underline;
+}
 .songContainer {
     --song-x: 1290px; /* Default value for --x */
     display: flex;
