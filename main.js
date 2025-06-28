@@ -368,7 +368,7 @@ function loadSfx() {
         volume: 0.5,
     });
 }
-var scores = ["Mary Had a Little Lamb", "Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Hey, Diddle Diddle", "Row, Row, Row Your Boat", "Old MacDonald Had a Farm",  "Replacement Ben", "What a Friend We Have In Jesus", "Minuet in G", "Symphony of Fate",];
+var scores = ["Mary Had a Little Lamb", "Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Hey, Diddle Diddle", "Row, Row, Row Your Boat", "Old MacDonald Had a Farm",  "Replacement Ben", "All Things Bright And Beautiful", "What a Friend We Have In Jesus", "Minuet in G", "Symphony of Fate",];
 function loadPage() {
     loadMenu();
 }
