@@ -494,7 +494,7 @@ function loadMenu(data) {
                 dir = 1;
             }
             playedDiffs.push(note.num - lastNote);
-            while(playedDiffs > diffs.length) {
+            while(playedDiffs.length > diffs.length) {
                 playedDiffs.shift();
             }
             var match = true;
@@ -503,8 +503,10 @@ function loadMenu(data) {
                     match = false;
                 }
             });
+            console.log(playedDiffs);
             if(match) {
-                playSong("Canon in M.D", "Rhythm");
+                scores.push("Canon in M.D");
+                chooseSong("Canon in M.D", "Rhythm");
             }
             lastNote = note.num;
         }

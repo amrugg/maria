@@ -39,8 +39,9 @@
                 var melody = [];
                 var harmony = [];
                 function inMelody(beat) {
+                    var minMargin = 0.1
                     for(var i = 0; i < melody.length; i++) {
-                        if(melody[i].trueBeat === beat) {
+                        if(Math.abs(melody[i].trueBeat - beat) < minMargin) {
                             return true;
                         }
                     }
