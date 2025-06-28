@@ -644,7 +644,7 @@ function playSong(song, mode) {
     var loading = 0;
     var maxLoad = 2;
     activeSong = {song, mode};
-    getJson("/music/" + song + ".json", function(err, json) {
+    getJson("/maria/music/" + song + ".json", function(err, json) {
         if(err) {
             console.error(err);
         } else {

@@ -139,7 +139,7 @@ function loadStaffGame() {
     starBar = makeStarBar();
     starBar.update(1);
     state = playStaff;
-    hazardSpeed = innerWidth/3;
+    hazardSpeed = innerWidth/7;
     lastCheckedIndex = 0;
 
     function makeStar(note) {
