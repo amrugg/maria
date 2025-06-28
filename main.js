@@ -247,7 +247,7 @@ var staffProps = {
 function startStaffGame() {
     freePlay = true;
     startTime = Date.now() + beatTime * downBeats;
-    var staff = cde("img.staff", {src: "sprites/staff.svg", style: {height: "90%", zIndex: 0}});
+    var staff = cde("img.staff", {src: baseDir + baseDir + "sprites/staff.svg", style: {height: "90%", zIndex: 0}});
     page.appendChild(staff);
     staffProps.scale = staff.clientHeight/staff.naturalHeight;
     loadStaffGame(midiWhole, staffProps, beatTime);
@@ -279,7 +279,7 @@ function makeSong(song, scale = 20, addVbl) {
         dist: 32.76,
         scale: 1,
     };
-    var staffEl = cde("img.staff", {src: "/sheets/" + song + ".svg"});
+    var staffEl = cde("img.staff", {src: baseDir + "/sheets/" + song + ".svg"});
     page.appendChild(staffEl);
     if(scale) {
         staffEl.style.height = scale + "%";
@@ -397,7 +397,7 @@ function loadMenu(data) {
             ]);
             var prof = Number(localStorage.getItem(song + "-" + modes[i]));
             for(var j = 0; j < 3; j++) {
-                starHolder.appendChild(cde("img" + (prof > j ? "" : ".empty"), {src: "sprites/star.png"}));
+                starHolder.appendChild(cde("img" + (prof > j ? "" : ".empty"), {src: baseDir + "sprites/star.png"}));
             }
             activePanel.appendChild(button);
             let mode = modes[i];
@@ -644,7 +644,7 @@ function playSong(song, mode) {
     var loading = 0;
     var maxLoad = 2;
     activeSong = {song, mode};
-    getJson("/maria/music/" + song + ".json", function(err, json) {
+    getJson(baseDir + "music/" + song + ".json", function(err, json) {
         if(err) {
             console.error(err);
         } else {
@@ -665,5 +665,12 @@ function playSong(song, mode) {
         }
     });
 }
+var baseDir;
+if(window.location.href.beginsWith("https://")) {
+    baseDir = "/maria/"
+} else {
+    baseDir = "/"
+}
+
 var activeSong = {};
 loadPage();
