@@ -191,7 +191,7 @@ function checkForMissedWhole() {
     });
 }
 function scheduleEnd(end) {
-    setTimeout(end, (midiWhole.at(-1).trueBeat + midiWhole.at(-1).beat + 8) * beatTime);
+    setTimeout(end, (midiWhole.at(-1).trueBeat + midiWhole.at(-1).beat + 8) * beatTime + (activeSong.mode === "Staff" ? 8000 : 0));
 }
 function endRhythmGame() {
     if(Date.now() - startTime < midiWhole.at(-1).trueBeat * beatTime) {
