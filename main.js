@@ -367,8 +367,19 @@ function loadSfx() {
         src: ["sounds/met.mp3"],
         volume: 0.5,
     });
+    sfx.high = new Howl({
+        src: ["sounds/high_score.ogg"],
+        volume: 0.5,
+    });
+    sfx.app = new Howl({
+        src: ["sounds/applause.ogg"],
+        volume: 0.5,
+    });
 }
 var scores = ["Mary Had a Little Lamb", "Joyful, Joyful, We Adore Thee", "Twinkle, Twinkle, Little Star", "Brother John", "Hey, Diddle Diddle", "Row, Row, Row Your Boat", "Old MacDonald Had a Farm",  "Replacement Ben", "All Things Bright And Beautiful", "What a Friend We Have In Jesus", "Minuet in G", "Symphony of Fate",];
+if(localStorage.getItem("CANON", true)) {
+    scores.push("Canon in M.D");
+}
 function loadPage() {
     loadMenu();
 }
@@ -445,7 +456,11 @@ function loadMenu(data) {
         var lastConfig = localStorage.getItem(key);
         if(lastConfig < data.level) {
             localStorage.setItem(key, data.level);
+            sfx.high.play();
         }
+	if(data.level > 1) {
+            sfx.app.play();
+	}
         for(var i = 0; i < scores.length; i++) {
             if(scores[i] === activeSong.song) {
                 currentIndex = i;
@@ -506,6 +521,7 @@ function loadMenu(data) {
             console.log(playedDiffs);
             if(match) {
                 scores.push("Canon in M.D");
+		localStorage.setItem("CANON", true);
                 chooseSong("Canon in M.D", "Rhythm");
             }
             lastNote = note.num;
